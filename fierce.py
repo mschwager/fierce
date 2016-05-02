@@ -2,16 +2,31 @@
 
 import argparse
 import functools
+import http.client
 import ipaddress
 import os
 import pprint
 import random
+import socket
 import time
 
 import dns.query
 import dns.resolver
 import dns.reversename
 import dns.zone
+
+def head_request(url):
+    conn = http.client.HTTPConnection(url)
+
+    try:
+        conn.request("HEAD", "/")
+    except socket.gaierror:
+        return []
+
+    resp = conn.getresponse()
+    conn.close()
+
+    return resp.getheaders()
 
 def query(resolver, domain, record_type='A'):
     try:
@@ -124,6 +139,12 @@ def fierce(**kwargs):
         ip = ipaddress.IPv4Address(record[0].address)
         print("Found: {} ({})".format(url, ip))
 
+        if kwargs.get('connect') and not ip.is_private:
+            headers = head_request(str(ip))
+            if headers:
+                print("HTTP connected:")
+                pprint.pprint(headers)
+
         if kwargs.get("wide"):
             ips = wide_expander(ip)
         elif kwargs.get("traverse"):
@@ -151,6 +172,8 @@ def parse_args():
 
     p.add_argument('--domain', action='store',
         help='domain name to test')
+    p.add_argument('--connect', action='store_true',
+        help='attempt HTTP connection to non-RFC 1918 hosts')
     p.add_argument('--wide', action='store_true',
         help='scan entire class c of discovered records')
     p.add_argument('--traverse', action='store', type=int, default=5,

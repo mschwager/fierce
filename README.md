@@ -117,5 +117,4 @@ $ fierce --help
 
 # TODO
 
-* Implement `connect` functionality
 * Provide multiprocessing capabilities
