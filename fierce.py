@@ -10,6 +10,7 @@ import random
 import socket
 import time
 
+import dns.name
 import dns.query
 import dns.resolver
 import dns.reversename
@@ -27,6 +28,14 @@ def head_request(url):
     conn.close()
 
     return resp.getheaders()
+
+def concatenate_subdomains(domain, subdomains):
+    result = dns.name.Name(tuple(subdomains) + domain.labels)
+
+    if not result.is_absolute():
+        result = result.concatenate(dns.name.root)
+
+    return result
 
 def query(resolver, domain, record_type='A'):
     try:
@@ -82,8 +91,6 @@ def find_nearby(resolver, ips, filter_func=None):
     pprint.pprint({k: v[0].to_text() for k, v in reversed_ips.items()})
 
 def fierce(**kwargs):
-    domain = kwargs['domain']
-
     resolver = dns.resolver.Resolver()
 
     nameservers = None
@@ -102,6 +109,10 @@ def fierce(**kwargs):
     if not kwargs.get("domain"):
         return
 
+    domain = dns.name.from_text(kwargs['domain'])
+    if not domain.is_absolute():
+        domain = domain.concatenate(dns.name.root)
+
     ns = query(resolver, domain, record_type='NS')
     domain_name_servers = [n.to_text() for n in ns]
     print("NS: {}".format(" ".join(domain_name_servers)))
@@ -118,7 +129,8 @@ def fierce(**kwargs):
         pprint.pprint({k: v.to_text(k) for k, v in zone.items()})
         return
 
-    random_domain = "{}.{}".format(random.randint(1e10, 1e11), domain)
+    random_subdomain = str(random.randint(1e10, 1e11))
+    random_domain = concatenate_subdomains(domain, [random_subdomain])
     wildcard = query(resolver, random_domain, record_type='A')
     print("Wildcard: {}".format("success" if wildcard else "failure"))
 
@@ -130,7 +142,7 @@ def fierce(**kwargs):
     visited = set()
 
     for subdomain in subdomains:
-        url = "{}.{}".format(subdomain, domain)
+        url = concatenate_subdomains(domain, [subdomain])
         record = query(resolver, url, record_type='A')
 
         if record is None:
