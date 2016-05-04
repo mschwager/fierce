@@ -39,7 +39,23 @@ def concatenate_subdomains(domain, subdomains):
 
 def query(resolver, domain, record_type='A'):
     try:
-        return resolver.query(domain, record_type)
+        resp = resolver.query(domain, record_type, raise_on_no_answer=False)
+        if resp.response.answer:
+            return resp
+
+        # If we don't receive an answer from our current resolver let's
+        # assume we received information on nameservers we can use and
+        # perform the same query with those nameservers
+        if resp.response.additional and resp.response.authority:
+            ns = [
+                rdata.address
+                for additionals in resp.response.additional
+                for rdata in additionals.items
+            ]
+            resolver.nameservers = ns
+            return query(resolver, domain, record_type)
+
+        return None
     except dns.resolver.NXDOMAIN:
         return None
 
