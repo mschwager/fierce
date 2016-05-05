@@ -17,11 +17,9 @@ Useful links:
 
 # Overview
 
-First things first, `fierce` was originally written by RSnake and the guys over
-at http://ha.ckers.org/. All credit for the original idea goes to RSnake. This
-is a conversion to Python to simplify and modernize the codebase. My hope is
-that the community will find it useful, help improve upon it, and learn
-something new in the process.
+First, credit where credit is due, `fierce` was originally written by RSnake
+along with others at http://ha.ckers.org/. This is simply a conversion to
+Python to simplify and modernize the codebase.
 
 The original description was very apt, so I'll include it here:
 
@@ -56,10 +54,17 @@ Let's start with something basic:
 $ fierce --domain google.com --subdomains accounts admin ads
 ```
 
+Traverse IPs near discovered domains to search for contigous blocks with the
+`--traverse` flag:
+
+```
+$ fierce --domain facebook.com --subdomains admin --traverse 10
+```
+
 Limit nearby IP traversal to certain domains with the `--search` flag:
 
 ```
-$ fierce --domain facebook.com --subdomains admin --traverse 10 --search fb.com fb.net
+$ fierce --domain facebook.com --subdomains admin --search fb.com fb.net
 ```
 
 Attempt an `HTTP` connection on domains discovered with the `--connect` flag:
@@ -68,8 +73,9 @@ Attempt an `HTTP` connection on domains discovered with the `--connect` flag:
 $ fierce --domain stackoverflow.com --subdomains mail --connect
 ```
 
-We can exchange speed for breadth with the `--wide` flag which will look for
-nearby domains on all IPs on the Class C of a matching domain:
+Exchange speed for breadth with the `--wide` flag, which looks for nearby
+domains on all IPs of the [Class C](https://en.wikipedia.org/wiki/Classful_network)
+of a discovered domain:
 
 ```
 $ fierce --domain facebook.com --wide
