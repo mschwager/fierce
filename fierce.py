@@ -56,7 +56,7 @@ def query(resolver, domain, record_type='A'):
             return query(resolver, domain, record_type)
 
         return None
-    except dns.resolver.NXDOMAIN:
+    except (dns.resolver.NXDOMAIN, dns.resolver.NoNameservers):
         return None
 
 def reverse_query(resolver, ip):
