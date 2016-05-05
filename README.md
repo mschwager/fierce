@@ -53,26 +53,19 @@ $ pip install -r requirements.txt
 Let's start with something basic:
 
 ```
-$ fierce --domain google.com --subdomains accounts admin ads --traverse 1
-NS: ns2.google.com. ns3.google.com. ns4.google.com. ns1.google.com.
-SOA: ns4.google.com. (216.239.38.10)
-Zone: failure
-Wildcard: failure
-Found: accounts.google.com (172.217.0.109)
-Nearby:
-{'172.217.0.108': 'ord08s11-in-f12.1e100.net.',
- '172.217.0.109': 'ord08s11-in-f13.1e100.net.',
- '172.217.0.110': 'ord08s11-in-f14.1e100.net.'}
-Found: admin.google.com (206.181.8.241)
-Found: ads.google.com (206.181.8.241)
+$ fierce --domain google.com --subdomains accounts admin ads
 ```
 
-We can filter our nearby searching by specifying `--search`. This allows us
-to consider nearby alias domains. For example, if we're looking at
-`facebook.com` we may also consider `fb.net` and `fb.com`:
+Limit nearby IP traversal to certain domains with the `--search` flag:
 
 ```
 $ fierce --domain facebook.com --subdomains admin --traverse 10 --search fb.com fb.net
+```
+
+Attempt an `HTTP` connection on domains discovered with the `--connect` flag:
+
+```
+$ fierce --domain stackoverflow.com --subdomains mail --connect
 ```
 
 We can exchange speed for breadth with the `--wide` flag which will look for
@@ -88,12 +81,6 @@ useful service for testing for and learning about zone transfers:
 
 ```
 $ fierce --domain zonetransfer.me
-NS: nsztm2.digi.ninja. nsztm1.digi.ninja.
-SOA: nsztm1.digi.ninja. (81.4.108.41)
-Zone: success
-{<DNS name @>: '@ 7200 IN SOA nsztm1.digi.ninja. robin.digi.ninja. 2014101603 '
-               '172800 900 1209600 3600\n'
-...
 ```
 
 To save the results to a file for later use we can simply redirect output:
