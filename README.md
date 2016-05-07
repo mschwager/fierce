@@ -74,7 +74,7 @@ $ fierce --domain stackoverflow.com --subdomains mail --connect
 ```
 
 Exchange speed for breadth with the `--wide` flag, which looks for nearby
-domains on all IPs of the [Class C](https://en.wikipedia.org/wiki/Classful_network)
+domains on all IPs of the [/24](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#IPv4_CIDR_blocks)
 of a discovered domain:
 
 ```
