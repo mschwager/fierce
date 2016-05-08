@@ -36,14 +36,17 @@ The original description was very apt, so I'll include it here:
 # Installing
 
 ```
-$ pip3 install git+https://github.com/mschwager/fierce
+$ pip3 install fierce
+$ fierce -h
 ```
 
 OR
 
 ```
 $ git clone https://github.com/mschwager/fierce.git
+$ cd fierce
 $ pip3 install -r requirements.txt
+$ python3 fierce.py -h
 ```
 
 # Using
