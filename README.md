@@ -19,7 +19,7 @@ Useful links:
 
 First, credit where credit is due, `fierce` was originally written by RSnake
 along with others at http://ha.ckers.org/. This is simply a conversion to
-Python to simplify and modernize the codebase.
+Python 3 to simplify and modernize the codebase.
 
 The original description was very apt, so I'll include it here:
 
@@ -36,14 +36,14 @@ The original description was very apt, so I'll include it here:
 # Installing
 
 ```
-$ pip install git+https://github.com/mschwager/fierce
+$ pip3 install git+https://github.com/mschwager/fierce
 ```
 
 OR
 
 ```
 $ git clone https://github.com/mschwager/fierce.git
-$ pip install -r requirements.txt
+$ pip3 install -r requirements.txt
 ```
 
 # Using
