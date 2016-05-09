@@ -57,7 +57,7 @@ Let's start with something basic:
 $ fierce --domain google.com --subdomains accounts admin ads
 ```
 
-Traverse IPs near discovered domains to search for contigous blocks with the
+Traverse IPs near discovered domains to search for contiguous blocks with the
 `--traverse` flag:
 
 ```
