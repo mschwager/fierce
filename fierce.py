@@ -16,6 +16,49 @@ import dns.resolver
 import dns.reversename
 import dns.zone
 
+def find_subdomain_list_file(filename):
+    # First check the list directory relative to where we are. This
+    # will typically happen if they simply cloned the Github repository
+    filename_path = os.path.join(os.path.dirname(__file__), "lists", filename)
+    if os.path.exists(filename_path):
+        return os.path.abspath(filename_path)
+
+    try:
+        import pkg_resources
+    except ImportError:
+        return filename
+
+    # If the relative check failed then attempt to find the list file
+    # in the pip package directory. This will typically happen on pip package
+    # installs (duh)
+    #
+    # Here's how pip itself handles this:
+    #
+    #     https://github.com/pypa/pip/blob/master/pip/commands/show.py
+    #
+    try:
+        fierce = pkg_resources.get_distribution('fierce')
+    except pkg_resources.DistributionNotFound:
+        return filename
+
+    if isinstance(fierce, pkg_resources.Distribution):
+        paths = []
+        if fierce.has_metadata('RECORD'):
+            lines = fierce.get_metadata_lines('RECORD')
+            paths = [l.split(',')[0] for l in lines]
+            paths = [os.path.join(fierce.location, p) for p in paths]
+        elif fierce.has_metadata('installed-files.txt'):
+            lines = fierce.get_metadata_lines('installed-files.txt')
+            paths = [l for l in lines]
+            paths = [os.path.join(fierce.egg_info, p) for p in paths]
+
+        for p in paths:
+            if filename == os.path.basename(p):
+                return p
+
+    # If we couldn't find anything just return the original list file
+    return filename
+
 def head_request(url):
     conn = http.client.HTTPConnection(url)
 
@@ -217,7 +260,7 @@ def parse_args():
     subdomain_group.add_argument('--subdomains', action='store', nargs='+',
         help='use these subdomains')
     subdomain_group.add_argument('--subdomain-file', action='store',
-        default=os.path.join("lists", "default.txt"),
+        default="default.txt",
         help='use subdomains specified in this file (one per line)')
 
     dns_group = p.add_mutually_exclusive_group()
@@ -227,6 +270,12 @@ def parse_args():
         help='use dns servers specified in this file for reverse lookups (one per line)')
 
     args = p.parse_args()
+
+    # Attempt to intelligently find the subdomain list depending on
+    # how this library was installed.
+    if args.subdomain_file and not os.path.exists(args.subdomain_file):
+        args.subdomain_file = find_subdomain_list_file(args.subdomain_file)
+
     return args
 
 def main():
