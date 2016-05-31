@@ -16,6 +16,7 @@ import dns.resolver
 import dns.reversename
 import dns.zone
 
+
 def find_subdomain_list_file(filename):
     # First check the list directory relative to where we are. This
     # will typically happen if they simply cloned the Github repository
@@ -59,6 +60,7 @@ def find_subdomain_list_file(filename):
     # If we couldn't find anything just return the original list file
     return filename
 
+
 def head_request(url):
     conn = http.client.HTTPConnection(url)
 
@@ -73,6 +75,7 @@ def head_request(url):
 
     return resp.getheaders()
 
+
 def concatenate_subdomains(domain, subdomains):
     result = dns.name.Name(tuple(subdomains) + domain.labels)
 
@@ -80,6 +83,7 @@ def concatenate_subdomains(domain, subdomains):
         result = result.concatenate(dns.name.root)
 
     return result
+
 
 def query(resolver, domain, record_type='A'):
     try:
@@ -103,8 +107,10 @@ def query(resolver, domain, record_type='A'):
     except (dns.resolver.NXDOMAIN, dns.resolver.NoNameservers):
         return None
 
+
 def reverse_query(resolver, ip):
     return query(resolver, dns.reversename.from_address(ip), record_type='PTR')
+
 
 def zone_transfer(address, domain):
     try:
@@ -112,12 +118,14 @@ def zone_transfer(address, domain):
     except (ConnectionResetError, dns.exception.FormError):
         return None
 
+
 def get_class_c_network(ip):
     ip = int(ip)
     floored = ipaddress.ip_address(ip - (ip % (2**8)))
     class_c = ipaddress.IPv4Network('{}/24'.format(floored))
 
     return class_c
+
 
 def traverse_expander(ip, n=5):
     class_c = get_class_c_network(ip)
@@ -127,6 +135,7 @@ def traverse_expander(ip, n=5):
 
     return result
 
+
 def wide_expander(ip):
     class_c = get_class_c_network(ip)
 
@@ -134,8 +143,10 @@ def wide_expander(ip):
 
     return result
 
+
 def search_filter(domains, address):
     return any(domain in address for domain in domains)
+
 
 def find_nearby(resolver, ips, filter_func=None):
     reversed_ips = {str(i): reverse_query(resolver, str(i)) for i in ips}
@@ -149,6 +160,7 @@ def find_nearby(resolver, ips, filter_func=None):
 
     print("Nearby:")
     pprint.pprint({k: v[0].to_text() for k, v in reversed_ips.items()})
+
 
 def fierce(**kwargs):
     resolver = dns.resolver.Resolver()
@@ -236,9 +248,9 @@ def fierce(**kwargs):
         if kwargs.get("delay"):
             time.sleep(kwargs["delay"])
 
+
 def parse_args():
-    p = argparse.ArgumentParser(description=
-        '''
+    p = argparse.ArgumentParser(description='''
         A DNS reconnaissance tool for locating non-contiguous IP space.
         ''', formatter_class=argparse.RawTextHelpFormatter)
 
@@ -278,6 +290,7 @@ def parse_args():
         args.subdomain_file = find_subdomain_list_file(args.subdomain_file)
 
     return args
+
 
 def main():
     args = parse_args()
