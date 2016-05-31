@@ -66,9 +66,10 @@ def head_request(url):
         conn.request("HEAD", "/")
     except socket.gaierror:
         return []
-
-    resp = conn.getresponse()
-    conn.close()
+    else:
+        resp = conn.getresponse()
+    finally:
+        conn.close()
 
     return resp.getheaders()
 
