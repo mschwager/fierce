@@ -9,6 +9,7 @@ import pprint
 import random
 import socket
 import time
+from multiprocessing import Process, Queue
 
 import dns.name
 import dns.query
@@ -180,6 +181,11 @@ def fierce(**kwargs):
 
     if not kwargs.get("domain"):
         return
+    
+    if not kwargs.get("concurrency"):
+        numWorkers = 1
+    else:
+        numWorkers = kwargs.get("concurrency")
 
     domain = dns.name.from_text(kwargs['domain'])
     if not domain.is_absolute():
@@ -213,41 +219,61 @@ def fierce(**kwargs):
 
     visited = set()
 
+    def subdomainWorker(visited):  
+        while True:
+            subdomain = subdomainQueue.get()
+            if type(subdomain) is int:
+                return
+            url = concatenate_subdomains(domain, [subdomain])
+            record = query(resolver, url, record_type='A')
+
+            if record is None:
+                continue
+
+            ip = ipaddress.IPv4Address(record[0].address)
+            print("Found: {} ({})".format(url, ip))
+
+            if kwargs.get('connect') and not ip.is_private:
+                headers = head_request(str(ip))
+                if headers:
+                    print("HTTP connected:")
+                    pprint.pprint(headers)
+
+            if kwargs.get("wide"):
+                ips = wide_expander(ip)
+            elif kwargs.get("traverse"):
+                ips = traverse_expander(ip, kwargs["traverse"])
+            else:
+                continue
+
+            filter_func = None
+            if kwargs.get("search"):
+                filter_func = functools.partial(search_filter, kwargs["search"])
+
+            ips = set(ips) - set(visited)
+            visited |= ips
+
+            find_nearby(resolver, ips, filter_func=filter_func)
+
+            if kwargs.get("delay"):
+                time.sleep(kwargs["delay"])
+
+
+    workers = []
+    subdomainQueue = Queue()
+    for i in range(numWorkers):
+        p = Process(target=subdomainWorker, args=(visited,))
+        workers.append(p)
+        p.start()
     for subdomain in subdomains:
-        url = concatenate_subdomains(domain, [subdomain])
-        record = query(resolver, url, record_type='A')
-
-        if record is None:
-            continue
-
-        ip = ipaddress.IPv4Address(record[0].address)
-        print("Found: {} ({})".format(url, ip))
-
-        if kwargs.get('connect') and not ip.is_private:
-            headers = head_request(str(ip))
-            if headers:
-                print("HTTP connected:")
-                pprint.pprint(headers)
-
-        if kwargs.get("wide"):
-            ips = wide_expander(ip)
-        elif kwargs.get("traverse"):
-            ips = traverse_expander(ip, kwargs["traverse"])
-        else:
-            continue
-
-        filter_func = None
-        if kwargs.get("search"):
-            filter_func = functools.partial(search_filter, kwargs["search"])
-
-        ips = set(ips) - set(visited)
-        visited |= ips
-
-        find_nearby(resolver, ips, filter_func=filter_func)
-
-        if kwargs.get("delay"):
-            time.sleep(kwargs["delay"])
-
+        subdomainQueue.put(subdomain)
+    while True:
+        if subdomainQueue.empty():
+            for i in range(numWorkers):
+                subdomainQueue.put(50)
+            for worker in workers:
+                worker.join()
+                sys.exit()
 
 def parse_args():
     p = argparse.ArgumentParser(description='''
@@ -256,6 +282,8 @@ def parse_args():
 
     p.add_argument('--domain', action='store',
         help='domain name to test')
+    p.add_argument('--concurrency', action='store', type=int,
+        help='number of cuncurrent processes')
     p.add_argument('--connect', action='store_true',
         help='attempt HTTP connection to non-RFC 1918 hosts')
     p.add_argument('--wide', action='store_true',

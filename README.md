@@ -89,7 +89,7 @@ Zone transfers are rare these days, but they give us the keys to the DNS castle.
 useful service for testing for and learning about zone transfers:
 
 ```
-$ fierce --domain zonetransfer.me
+$ fierce --domain zonetransfer.me --concurrency 10
 ```
 
 To save the results to a file for later use we can simply redirect output:
@@ -113,4 +113,3 @@ $ fierce --help
 
 # TODO
 
-* Provide multiprocessing capabilities
