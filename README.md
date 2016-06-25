@@ -54,7 +54,7 @@ $ python3 fierce.py -h
 Let's start with something basic:
 
 ```
-$ fierce --domain google.com --subdomains accounts admin ads
+$ fierce --domain google.com --subdomains accounts admin ads --concurrency 10
 ```
 
 Traverse IPs near discovered domains to search for contiguous blocks with the
@@ -89,7 +89,7 @@ Zone transfers are rare these days, but they give us the keys to the DNS castle.
 useful service for testing for and learning about zone transfers:
 
 ```
-$ fierce --domain zonetransfer.me --concurrency 10
+$ fierce --domain zonetransfer.me
 ```
 
 To save the results to a file for later use we can simply redirect output:
