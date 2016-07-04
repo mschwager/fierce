@@ -227,7 +227,7 @@ def fierce(**kwargs):
     random_subdomain = str(random.randint(1e10, 1e11))
     random_domain = concatenate_subdomains(domain, [random_subdomain])
     wildcard = query(resolver, random_domain, record_type='A')
-    print("Wildcard: {}".format("success" if wildcard else "failure"))
+    print("Wildcard: {}".format(wildcard[0].address if wildcard else "failure"))
 
     if kwargs.get('subdomains'):
         subdomains = kwargs["subdomains"]
