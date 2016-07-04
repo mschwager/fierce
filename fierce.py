@@ -5,6 +5,7 @@ import functools
 import http.client
 import ipaddress
 import os
+import sys
 import pprint
 import random
 import socket
@@ -273,7 +274,7 @@ def fierce(**kwargs):
                 subdomainQueue.put(50)
             for worker in workers:
                 worker.join()
-                sys.exit()
+            sys.exit()
 
 def parse_args():
     p = argparse.ArgumentParser(description='''
