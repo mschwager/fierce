@@ -3,9 +3,9 @@ python:
     - 3.2
     - 3.3
     - 3.4
-	- 3.5
+    - 3.5
 install:
-	- pip install -r requirements.txt
-	- pip install pep8
+    - pip install -r requirements.txt
+    - pip install pep8
 script:
-	- pep8 --ignore=E128,E501 fierce.py
+    - pep8 --ignore=E128,E501 fierce.py
