@@ -1,5 +1,7 @@
 # Fierce
 
+[![Build Status](https://travis-ci.org/mschwager/fierce.svg?branch=master)](https://travis-ci.org/mschwager/fierce)
+
 Fierce is a `DNS` reconnaissance tool for locating non-contiguous IP space.
 
 Useful links:
