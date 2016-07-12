@@ -1,14 +1,19 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+
+from __future__ import print_function, division, absolute_import, unicode_literals
 
 import argparse
 import functools
-import http.client
 import ipaddress
 import os
 import pprint
 import random
 import socket
 import time
+try:
+    import http.client as http_client
+except ImportError:
+    import httplib as http_client
 
 import dns.name
 import dns.query
@@ -62,7 +67,7 @@ def find_subdomain_list_file(filename):
 
 
 def head_request(url):
-    conn = http.client.HTTPConnection(url)
+    conn = http_client.HTTPConnection(url)
 
     try:
         conn.request("HEAD", "/")
@@ -104,7 +109,7 @@ def query(resolver, domain, record_type='A'):
             return query(resolver, domain, record_type)
 
         return None
-    except (dns.resolver.NXDOMAIN, dns.resolver.NoNameservers):
+    except (dns.resolver.NXDOMAIN, dns.resolver.NoNameservers, dns.exception.Timeout):
         return None
 
 
@@ -115,7 +120,7 @@ def reverse_query(resolver, ip):
 def zone_transfer(address, domain):
     try:
         return dns.zone.from_xfr(dns.query.xfr(address, domain))
-    except (ConnectionResetError, dns.exception.FormError):
+    except (dns.exception.FormError):
         return None
 
 

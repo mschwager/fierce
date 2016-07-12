@@ -1,1 +1,1 @@
-dnspython3
+dnspython
