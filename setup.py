@@ -25,7 +25,7 @@ setup(
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: Microsoft :: Windows',
         'Operating System :: POSIX',
-        'Programming Language :: Python :: 3 :: Only',
+        'Programming Language :: Python',
         'Topic :: Security',
     ],
     install_requires=install_requires,
