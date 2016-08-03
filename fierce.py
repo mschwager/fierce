@@ -61,12 +61,12 @@ def find_subdomain_list_file(filename):
     return filename
 
 
-def head_request(url):
-    conn = http.client.HTTPConnection(url)
+def head_request(url, timeout=2):
+    conn = http.client.HTTPConnection(url, timeout=timeout)
 
     try:
         conn.request("HEAD", "/")
-    except socket.gaierror:
+    except (ConnectionError, socket.gaierror, socket.timeout):
         return []
     else:
         resp = conn.getresponse()
@@ -115,7 +115,7 @@ def reverse_query(resolver, ip):
 def zone_transfer(address, domain):
     try:
         return dns.zone.from_xfr(dns.query.xfr(address, domain))
-    except (ConnectionResetError, dns.exception.FormError):
+    except (ConnectionError, dns.exception.FormError):
         return None
 
 
