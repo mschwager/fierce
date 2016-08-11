@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 This project adheres to [CHANGELOG](http://keepachangelog.com/).
 
+## [1.1.1] - 2016-08-11
+### Changed
+- Better error handling when making network connections
+- PEP8 formatting
+
 ## [1.1.0] - 2016-05-16
 ### Added
 - Intelligent subdomain file searching
