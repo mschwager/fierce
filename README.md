@@ -56,7 +56,7 @@ $ python3 fierce.py -h
 Let's start with something basic:
 
 ```
-$ fierce --domain google.com --subdomains accounts admin ads
+$ fierce --domain google.com --subdomains accounts admin ads --concurrency 10
 ```
 
 Traverse IPs near discovered domains to search for contiguous blocks with the
@@ -115,4 +115,3 @@ $ fierce --help
 
 # TODO
 
-* Provide multiprocessing capabilities
