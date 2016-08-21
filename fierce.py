@@ -119,12 +119,11 @@ def recursive_query(resolver, domain, record_type='NS'):
     try:
         while query_response is None:
             query_response = query(resolver, query_domain, record_type)
-            query_domain = query_domain.split('.' , 1)[1]
+            query_domain = query_domain.split('.', 1)[1]
     except IndexError:
         return None
 
     return query_response
-
 
 
 def zone_transfer(address, domain):
@@ -200,11 +199,13 @@ def fierce(**kwargs):
     if not domain.is_absolute():
         domain = domain.concatenate(dns.name.root)
 
-
     ns = recursive_query(resolver, domain, 'NS')
 
     if ns:
         domain_name_servers = [n.to_text() for n in ns]
+    else:
+        domain_name_servers = []
+
     print("NS: {}".format(" ".join(domain_name_servers) if ns else "failure"))
 
     soa = recursive_query(resolver, domain, record_type='SOA')
@@ -277,33 +278,73 @@ def parse_args():
         A DNS reconnaissance tool for locating non-contiguous IP space.
         ''', formatter_class=argparse.RawTextHelpFormatter)
 
-    p.add_argument('--domain', action='store',
-        help='domain name to test')
-    p.add_argument('--connect', action='store_true',
-        help='attempt HTTP connection to non-RFC 1918 hosts')
-    p.add_argument('--wide', action='store_true',
-        help='scan entire class c of discovered records')
-    p.add_argument('--traverse', action='store', type=int, default=5,
-        help='scan IPs near discovered records, this won\'t enter adjacent class c\'s')
-    p.add_argument('--search', action='store', nargs='+',
-        help='filter on these domains when expanding lookup')
-    p.add_argument('--range', action='store',
-        help='scan an internal IP range, use cidr notation')
-    p.add_argument('--delay', action='store', type=float, default=None,
-        help='time to wait between lookups')
+    p.add_argument(
+        '--domain',
+        action='store',
+        help='domain name to test'
+    )
+    p.add_argument(
+        '--connect',
+        action='store_true',
+        help='attempt HTTP connection to non-RFC 1918 hosts'
+    )
+    p.add_argument(
+        '--wide',
+        action='store_true',
+        help='scan entire class c of discovered records'
+    )
+    p.add_argument(
+        '--traverse',
+        action='store',
+        type=int,
+        default=5,
+        help='scan IPs near discovered records, this won\'t enter adjacent class c\'s'
+    )
+    p.add_argument(
+        '--search',
+        action='store',
+        nargs='+',
+        help='filter on these domains when expanding lookup'
+    )
+    p.add_argument(
+        '--range',
+        action='store',
+        help='scan an internal IP range, use cidr notation'
+    )
+    p.add_argument(
+        '--delay',
+        action='store',
+        type=float,
+        default=None,
+        help='time to wait between lookups'
+    )
 
     subdomain_group = p.add_mutually_exclusive_group()
-    subdomain_group.add_argument('--subdomains', action='store', nargs='+',
-        help='use these subdomains')
-    subdomain_group.add_argument('--subdomain-file', action='store',
+    subdomain_group.add_argument(
+        '--subdomains',
+        action='store',
+        nargs='+',
+        help='use these subdomains'
+    )
+    subdomain_group.add_argument(
+        '--subdomain-file',
+        action='store',
         default="default.txt",
-        help='use subdomains specified in this file (one per line)')
+        help='use subdomains specified in this file (one per line)'
+    )
 
     dns_group = p.add_mutually_exclusive_group()
-    dns_group.add_argument('--dns-servers', action='store', nargs='+',
-        help='use these dns servers for reverse lookups')
-    dns_group.add_argument('--dns-file', action='store',
-        help='use dns servers specified in this file for reverse lookups (one per line)')
+    dns_group.add_argument(
+        '--dns-servers',
+        action='store',
+        nargs='+',
+        help='use these dns servers for reverse lookups'
+    )
+    dns_group.add_argument(
+        '--dns-file',
+        action='store',
+        help='use dns servers specified in this file for reverse lookups (one per line)'
+    )
 
     args = p.parse_args()
 
