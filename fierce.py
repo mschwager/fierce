@@ -112,6 +112,21 @@ def reverse_query(resolver, ip):
     return query(resolver, dns.reversename.from_address(ip), record_type='PTR')
 
 
+def recursive_query(resolver, domain, record_type='NS'):
+
+    query_domain = str(domain)
+    query_response = None
+    try:
+        while query_response is None:
+            query_response = query(resolver, query_domain, record_type)
+            query_domain = query_domain.split('.' , 1)[1]
+    except IndexError:
+        return None
+
+    return query_response
+
+
+
 def zone_transfer(address, domain):
     try:
         return dns.zone.from_xfr(dns.query.xfr(address, domain))
@@ -185,15 +200,23 @@ def fierce(**kwargs):
     if not domain.is_absolute():
         domain = domain.concatenate(dns.name.root)
 
-    ns = query(resolver, domain, record_type='NS')
-    domain_name_servers = [n.to_text() for n in ns]
-    print("NS: {}".format(" ".join(domain_name_servers)))
 
-    soa = query(resolver, domain, record_type='SOA')
-    soa_mname = soa[0].mname
-    master = query(resolver, soa_mname, record_type='A')
-    master_address = master[0].address
-    print("SOA: {} ({})".format(soa_mname, master_address))
+    ns = recursive_query(resolver, domain, 'NS')
+
+    if ns:
+        domain_name_servers = [n.to_text() for n in ns]
+    print("NS: {}".format(" ".join(domain_name_servers) if ns else "failure"))
+
+    soa = recursive_query(resolver, domain, record_type='SOA')
+    if soa:
+        soa_mname = soa[0].mname
+        master = query(resolver, soa_mname, record_type='A')
+        master_address = master[0].address
+        print("SOA: {} ({})".format(soa_mname, master_address))
+    else:
+        print("SOA: failure")
+        print("Failed to lookup NS/SOA, Domain does not exist")
+        exit(-1)
 
     zone = zone_transfer(master_address, domain)
     print("Zone: {}".format("success" if zone else "failure"))
@@ -204,7 +227,7 @@ def fierce(**kwargs):
     random_subdomain = str(random.randint(1e10, 1e11))
     random_domain = concatenate_subdomains(domain, [random_subdomain])
     wildcard = query(resolver, random_domain, record_type='A')
-    print("Wildcard: {}".format("success" if wildcard else "failure"))
+    print("Wildcard: {}".format(wildcard[0].address if wildcard else "failure"))
 
     if kwargs.get('subdomains'):
         subdomains = kwargs["subdomains"]
@@ -217,7 +240,7 @@ def fierce(**kwargs):
         url = concatenate_subdomains(domain, [subdomain])
         record = query(resolver, url, record_type='A')
 
-        if record is None:
+        if record is None or (record[0].address == wildcard[0].address):
             continue
 
         ip = ipaddress.IPv4Address(record[0].address)
