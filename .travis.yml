@@ -6,6 +6,6 @@ python:
     - 3.5
 install:
     - pip install -r requirements.txt
-    - pip install pep8
+    - pip install -r requirements-dev.txt
 script:
-    - pep8 --ignore=E128,E501 fierce.py
+    - nose2

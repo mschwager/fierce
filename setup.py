@@ -8,6 +8,12 @@ requirements_filename = os.path.join(
 with open(requirements_filename) as fd:
     install_requires = [i.strip() for i in fd.readlines()]
 
+requirements_dev_filename = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'requirements-dev.txt')
+
+with open(requirements_filename) as fd:
+    tests_require = [i.strip() for i in fd.readlines()]
+
 data_files_lists = [os.path.join('lists', l) for l in os.listdir('lists')]
 
 setup(
@@ -29,6 +35,7 @@ setup(
         'Topic :: Security',
     ],
     install_requires=install_requires,
+    tests_require=tests_require,
     entry_points={
         'console_scripts': [
             'fierce = fierce:main',
