@@ -77,6 +77,12 @@ def head_request(url, timeout=2):
 
 
 def concatenate_subdomains(domain, subdomains):
+    subdomains = [
+        nested_subdomain
+        for subdomain in subdomains
+        for nested_subdomain in subdomain.split('.')
+    ]
+
     result = dns.name.Name(tuple(subdomains) + domain.labels)
 
     if not result.is_absolute():

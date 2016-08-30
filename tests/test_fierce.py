@@ -46,5 +46,23 @@ class TestFierce(unittest.TestCase):
 
         self.assertEqual(expected, result)
 
+    def test_concatenate_subdomains_single_sub_subdomain(self):
+        domain = dns.name.from_text("example.com.")
+        subdomains = ["sd1.sd2"]
+
+        result = fierce.concatenate_subdomains(domain, subdomains)
+        expected = dns.name.from_text("sd1.sd2.example.com.")
+
+        self.assertEqual(expected, result)
+
+    def test_concatenate_subdomains_multiple_sub_subdomain(self):
+        domain = dns.name.from_text("example.com.")
+        subdomains = ["sd1.sd2", "sd3.sd4"]
+
+        result = fierce.concatenate_subdomains(domain, subdomains)
+        expected = dns.name.from_text("sd1.sd2.sd3.sd4.example.com.")
+
+        self.assertEqual(expected, result)
+
 if __name__ == "__main__":
     unittest.main()
