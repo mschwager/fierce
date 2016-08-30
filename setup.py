@@ -18,7 +18,7 @@ data_files_lists = [os.path.join('lists', l) for l in os.listdir('lists')]
 
 setup(
     name='fierce',
-    version='1.1.2',
+    version='1.1.3',
     description='A DNS reconnaissance tool for locating non-contiguous IP space.',
     url='https://github.com/mschwager/fierce',
     py_modules=['fierce'],
