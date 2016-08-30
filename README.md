@@ -1,6 +1,8 @@
 # Fierce
 
 [![Build Status](https://travis-ci.org/mschwager/fierce.svg?branch=master)](https://travis-ci.org/mschwager/fierce)
+[![Python Versions](https://img.shields.io/pypi/pyversions/fierce.svg)](https://img.shields.io/pypi/pyversions/fierce.svg)
+[![PyPI Version](https://img.shields.io/pypi/v/fierce.svg)](https://img.shields.io/pypi/v/fierce.svg)
 
 Fierce is a `DNS` reconnaissance tool for locating non-contiguous IP space.
 
