@@ -247,7 +247,7 @@ def fierce(**kwargs):
         url = concatenate_subdomains(domain, [subdomain])
         record = query(resolver, url, record_type='A')
 
-        if record is None or (record[0].address == wildcard[0].address):
+        if record is None or wildcard is None or (record[0].address == wildcard[0].address):
             continue
 
         ip = ipaddress.IPv4Address(record[0].address)
