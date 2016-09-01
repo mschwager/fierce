@@ -1,3 +1,4 @@
 nose2
 cov-core
 coveralls
+pyfakefs

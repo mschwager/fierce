@@ -182,17 +182,33 @@ def find_nearby(resolver, ips, filter_func=None):
     pprint.pprint({k: v[0].to_text() for k, v in reversed_ips.items() if v})
 
 
+def update_resolver_nameservers(resolver, nameservers, nameserver_filename):
+    """
+    Update a resolver's nameservers. The following priority is taken:
+        1. Nameservers list provided as an argument
+        2. A filename containing a list of nameservers
+        3. The original nameservers associated with the resolver
+    """
+    if nameservers:
+        resolver.nameservers = nameservers
+    elif nameserver_filename:
+        nameservers = [ns.strip() for ns in open(nameserver_filename).readlines()]
+        resolver.nameservers = nameservers
+    else:
+        # Use original nameservers
+        pass
+
+    return resolver
+
+
 def fierce(**kwargs):
     resolver = dns.resolver.Resolver()
 
-    nameservers = None
-    if kwargs.get('dns_servers'):
-        nameservers = kwargs['dns_servers']
-    elif kwargs.get('dns_file'):
-        nameservers = [ns.strip() for ns in open(kwargs["dns_file"]).readlines()]
-
-    if nameservers:
-        resolver.nameservers = nameservers
+    resolver = update_resolver_nameservers(
+        resolver,
+        kwargs['dns_servers'],
+        kwargs['dns_file']
+    )
 
     if kwargs.get("range"):
         internal_range = ipaddress.IPv4Network(kwargs.get("range"))
