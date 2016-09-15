@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import textwrap
 import unittest
 
 import dns.resolver
@@ -8,12 +9,6 @@ import dns.resolver
 from pyfakefs import fake_filesystem_unittest
 
 import fierce
-
-
-CONTENTS = """nameserver1
-nameserver2
-nameserver3
-"""
 
 
 class TestFilesystem(fake_filesystem_unittest.TestCase):
@@ -74,10 +69,14 @@ class TestFilesystem(fake_filesystem_unittest.TestCase):
     def test_update_resolver_nameservers_no_nameserver_use_file(self):
         nameserver_filename = os.path.join("directory", "nameservers")
         nameservers = []
+        contents = textwrap.dedent("""nameserver1
+        nameserver2
+        nameserver3
+        """)
 
         self.fs.CreateFile(
             nameserver_filename,
-            contents=CONTENTS
+            contents=contents
         )
 
         resolver = dns.resolver.Resolver()
@@ -88,16 +87,20 @@ class TestFilesystem(fake_filesystem_unittest.TestCase):
             nameserver_filename
         )
 
-        expected = CONTENTS.split()
+        expected = contents.split()
         self.assertEqual(expected, result.nameservers)
 
     def test_update_resolver_nameservers_prefer_nameservers_over_file(self):
         nameserver_filename = os.path.join("directory", "nameservers")
         nameservers = ['192.168.1.1', '192.168.1.2']
+        contents = textwrap.dedent("""nameserver1
+        nameserver2
+        nameserver3
+        """)
 
         self.fs.CreateFile(
             nameserver_filename,
-            contents=CONTENTS
+            contents=contents
         )
 
         resolver = dns.resolver.Resolver()
