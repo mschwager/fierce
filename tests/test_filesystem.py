@@ -114,6 +114,84 @@ class TestFilesystem(fake_filesystem_unittest.TestCase):
         expected = nameservers
         self.assertEqual(expected, result.nameservers)
 
+    def test_get_subdomains_empty_no_file(self):
+        subdomain_filename = None
+        subdomains = []
+
+        result = fierce.get_subdomains(
+            subdomains,
+            subdomain_filename
+        )
+
+        expected = subdomains
+        self.assertEqual(expected, result)
+
+    def test_get_subdomains_single_subdomain_no_file(self):
+        subdomain_filename = None
+        subdomains = ['subdomain.domain.com']
+
+        result = fierce.get_subdomains(
+            subdomains,
+            subdomain_filename
+        )
+
+        expected = subdomains
+        self.assertEqual(expected, result)
+
+    def test_get_subdomains_multiple_subdomains_no_file(self):
+        subdomain_filename = None
+        subdomains = ['192.168.1.1', '192.168.1.2']
+
+        result = fierce.get_subdomains(
+            subdomains,
+            subdomain_filename
+        )
+
+        expected = subdomains
+        self.assertEqual(expected, result)
+
+    def test_get_subdomains_no_subdomains_use_file(self):
+        subdomain_filename = os.path.join("directory", "subdomains")
+        subdomains = []
+        contents = textwrap.dedent("""sd1.domain.com
+        sd2.domain.com
+        sd3.domain.com
+        """)
+
+        self.fs.CreateFile(
+            subdomain_filename,
+            contents=contents
+        )
+
+        result = fierce.get_subdomains(
+            subdomains,
+            subdomain_filename
+        )
+
+        expected = contents.split()
+        self.assertEqual(expected, result)
+
+    def test_get_subdomains_prefer_subdomains_over_file(self):
+        subdomain_filename = os.path.join("directory", "subdomains")
+        subdomains = ['192.168.1.1', '192.168.1.2']
+        contents = textwrap.dedent("""sd1.domain.com
+        sd2.domain.com
+        sd3.domain.com
+        """)
+
+        self.fs.CreateFile(
+            subdomain_filename,
+            contents=contents
+        )
+
+        result = fierce.get_subdomains(
+            subdomains,
+            subdomain_filename
+        )
+
+        expected = subdomains
+        self.assertEqual(expected, result)
+
 
 if __name__ == "__main__":
     unittest.main()

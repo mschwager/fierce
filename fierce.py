@@ -182,6 +182,27 @@ def find_nearby(resolver, ips, filter_func=None):
     pprint.pprint({k: v[0].to_text() for k, v in reversed_ips.items() if v})
 
 
+def get_stripped_file_lines(filename):
+    """
+    Return lines of a file with whitespace removed
+    """
+    return [line.strip() for line in open(filename).readlines()]
+
+
+def get_subdomains(subdomains, subdomain_filename):
+    """
+    Return subdomains with the following priority:
+        1. Subdomains list provided as an argument
+        2. A filename containing a list of subdomains
+    """
+    if subdomains:
+        return subdomains
+    elif subdomain_filename:
+        return get_stripped_file_lines(subdomain_filename)
+
+    return []
+
+
 def update_resolver_nameservers(resolver, nameservers, nameserver_filename):
     """
     Update a resolver's nameservers. The following priority is taken:
@@ -192,7 +213,7 @@ def update_resolver_nameservers(resolver, nameservers, nameserver_filename):
     if nameservers:
         resolver.nameservers = nameservers
     elif nameserver_filename:
-        nameservers = [ns.strip() for ns in open(nameserver_filename).readlines()]
+        nameservers = get_stripped_file_lines(nameserver_filename)
         resolver.nameservers = nameservers
     else:
         # Use original nameservers
@@ -252,10 +273,10 @@ def fierce(**kwargs):
     wildcard = query(resolver, random_domain, record_type='A')
     print("Wildcard: {}".format(wildcard[0].address if wildcard else "failure"))
 
-    if kwargs.get('subdomains'):
-        subdomains = kwargs["subdomains"]
-    else:
-        subdomains = [sd.strip() for sd in open(kwargs["subdomain_file"]).readlines()]
+    subdomains = get_subdomains(
+        kwargs["subdomains"],
+        kwargs["subdomain_file"]
+    )
 
     visited = set()
 
