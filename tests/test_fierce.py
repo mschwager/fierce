@@ -2,13 +2,7 @@
 
 import ipaddress
 import unittest
-
-try:
-    # Python 3.3+
-    from unittest import mock
-except ImportError:
-    # Python 3.2 (third-party)
-    import mock
+import unittest.mock
 
 import dns.name
 import dns.resolver
@@ -155,13 +149,13 @@ class TestFierce(unittest.TestCase):
         domain = dns.name.from_text('example.com.')
         record_type = 'NS'
 
-        with mock.patch.object(fierce, 'query', return_value=None) as mock_method:
+        with unittest.mock.patch.object(fierce, 'query', return_value=None) as mock_method:
             result = fierce.recursive_query(resolver, domain, record_type=record_type)
 
         expected = [
-            mock.call(resolver, 'example.com.', record_type),
-            mock.call(resolver, 'com.', record_type),
-            mock.call(resolver, '', record_type),
+            unittest.mock.call(resolver, 'example.com.', record_type),
+            unittest.mock.call(resolver, 'com.', record_type),
+            unittest.mock.call(resolver, '', record_type),
         ]
 
         mock_method.assert_has_calls(expected)
@@ -172,15 +166,15 @@ class TestFierce(unittest.TestCase):
         domain = dns.name.from_text('sd1.sd2.example.com.')
         record_type = 'NS'
 
-        with mock.patch.object(fierce, 'query', return_value=None) as mock_method:
+        with unittest.mock.patch.object(fierce, 'query', return_value=None) as mock_method:
             result = fierce.recursive_query(resolver, domain, record_type=record_type)
 
         expected = [
-            mock.call(resolver, 'sd1.sd2.example.com.', record_type),
-            mock.call(resolver, 'sd2.example.com.', record_type),
-            mock.call(resolver, 'example.com.', record_type),
-            mock.call(resolver, 'com.', record_type),
-            mock.call(resolver, '', record_type),
+            unittest.mock.call(resolver, 'sd1.sd2.example.com.', record_type),
+            unittest.mock.call(resolver, 'sd2.example.com.', record_type),
+            unittest.mock.call(resolver, 'example.com.', record_type),
+            unittest.mock.call(resolver, 'com.', record_type),
+            unittest.mock.call(resolver, '', record_type),
         ]
 
         mock_method.assert_has_calls(expected)
@@ -190,19 +184,19 @@ class TestFierce(unittest.TestCase):
         resolver = dns.resolver.Resolver()
         domain = dns.name.from_text('example.com.')
         record_type = 'NS'
-        good_response = mock.MagicMock()
+        good_response = unittest.mock.MagicMock()
         side_effect = [
             None,
             good_response,
             None,
         ]
 
-        with mock.patch.object(fierce, 'query', side_effect=side_effect) as mock_method:
+        with unittest.mock.patch.object(fierce, 'query', side_effect=side_effect) as mock_method:
             result = fierce.recursive_query(resolver, domain, record_type=record_type)
 
         expected = [
-            mock.call(resolver, 'example.com.', record_type),
-            mock.call(resolver, 'com.', record_type),
+            unittest.mock.call(resolver, 'example.com.', record_type),
+            unittest.mock.call(resolver, 'com.', record_type),
         ]
 
         mock_method.assert_has_calls(expected)
