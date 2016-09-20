@@ -2,8 +2,10 @@
 
 import ipaddress
 import unittest
+import unittest.mock
 
 import dns.name
+import dns.resolver
 
 import fierce
 
@@ -141,6 +143,64 @@ class TestFierce(unittest.TestCase):
         ]
 
         self.assertEqual(expected, result)
+
+    def test_recursive_query_basic_failure(self):
+        resolver = dns.resolver.Resolver()
+        domain = dns.name.from_text('example.com.')
+        record_type = 'NS'
+
+        with unittest.mock.patch.object(fierce, 'query', return_value=None) as mock_method:
+            result = fierce.recursive_query(resolver, domain, record_type=record_type)
+
+        expected = [
+            unittest.mock.call(resolver, 'example.com.', record_type),
+            unittest.mock.call(resolver, 'com.', record_type),
+            unittest.mock.call(resolver, '', record_type),
+        ]
+
+        mock_method.assert_has_calls(expected)
+        self.assertIs(result, None)
+
+    def test_recursive_query_long_domain_failure(self):
+        resolver = dns.resolver.Resolver()
+        domain = dns.name.from_text('sd1.sd2.example.com.')
+        record_type = 'NS'
+
+        with unittest.mock.patch.object(fierce, 'query', return_value=None) as mock_method:
+            result = fierce.recursive_query(resolver, domain, record_type=record_type)
+
+        expected = [
+            unittest.mock.call(resolver, 'sd1.sd2.example.com.', record_type),
+            unittest.mock.call(resolver, 'sd2.example.com.', record_type),
+            unittest.mock.call(resolver, 'example.com.', record_type),
+            unittest.mock.call(resolver, 'com.', record_type),
+            unittest.mock.call(resolver, '', record_type),
+        ]
+
+        mock_method.assert_has_calls(expected)
+        self.assertIs(result, None)
+
+    def test_recursive_query_basic_success(self):
+        resolver = dns.resolver.Resolver()
+        domain = dns.name.from_text('example.com.')
+        record_type = 'NS'
+        good_response = unittest.mock.MagicMock()
+        side_effect = [
+            None,
+            good_response,
+            None,
+        ]
+
+        with unittest.mock.patch.object(fierce, 'query', side_effect=side_effect) as mock_method:
+            result = fierce.recursive_query(resolver, domain, record_type=record_type)
+
+        expected = [
+            unittest.mock.call(resolver, 'example.com.', record_type),
+            unittest.mock.call(resolver, 'com.', record_type),
+        ]
+
+        mock_method.assert_has_calls(expected)
+        self.assertEqual(result, good_response)
 
 
 if __name__ == "__main__":
