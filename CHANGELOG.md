@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 This project adheres to [CHANGELOG](http://keepachangelog.com/).
 
+## [1.1.5] - 2017-01-08
+### Fixed
+- Fixed bug with CNAME records pointing to an A record without an associated IP
+- Fixed bug with connections being closed by remote peer
+
 ## [1.1.4] - 2016-08-30
 ### Fixed
 - Undo a PR that was breaking everything
