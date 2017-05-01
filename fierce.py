@@ -136,7 +136,7 @@ def recursive_query(resolver, domain, record_type='NS'):
 def zone_transfer(address, domain):
     try:
         return dns.zone.from_xfr(dns.query.xfr(address, domain))
-    except (ConnectionError, dns.exception.FormError, EOFError):
+    except (ConnectionError, EOFError, TimeoutError, dns.exception.FormError):
         return None
 
 

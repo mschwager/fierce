@@ -239,6 +239,42 @@ class TestFierce(unittest.TestCase):
 
         self.assertIs(result, None)
 
+    def test_zone_transfer_connection_error(self):
+        address = 'test'
+        domain = dns.name.from_text('example.com.')
+
+        with unittest.mock.patch.object(fierce.dns.zone, 'from_xfr', side_effect=ConnectionError()):
+            result = fierce.zone_transfer(address, domain)
+
+        self.assertIs(result, None)
+
+    def test_zone_transfer_eof_error(self):
+        address = 'test'
+        domain = dns.name.from_text('example.com.')
+
+        with unittest.mock.patch.object(fierce.dns.zone, 'from_xfr', side_effect=EOFError()):
+            result = fierce.zone_transfer(address, domain)
+
+        self.assertIs(result, None)
+
+    def test_zone_transfer_timeout_error(self):
+        address = 'test'
+        domain = dns.name.from_text('example.com.')
+
+        with unittest.mock.patch.object(fierce.dns.zone, 'from_xfr', side_effect=TimeoutError()):
+            result = fierce.zone_transfer(address, domain)
+
+        self.assertIs(result, None)
+
+    def test_zone_transfer_form_error(self):
+        address = 'test'
+        domain = dns.name.from_text('example.com.')
+
+        with unittest.mock.patch.object(fierce.dns.zone, 'from_xfr', side_effect=dns.exception.FormError()):
+            result = fierce.zone_transfer(address, domain)
+
+        self.assertIs(result, None)
+
 
 if __name__ == "__main__":
     unittest.main()
