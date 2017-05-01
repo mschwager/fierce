@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 This project adheres to [CHANGELOG](http://keepachangelog.com/).
 
+## Next release
+## Fixed
+- Cleaned subdomain lists -- casefolded, removed duplicates, removed FQDNs
+
 ## [1.1.5] - 2017-01-08
 ### Fixed
 - Fixed bug with CNAME records pointing to an A record without an associated IP

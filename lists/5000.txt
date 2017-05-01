@@ -454,7 +454,6 @@ ticket
 js
 ns9
 outlook
-MAIL
 foto
 www.en
 pro
@@ -1059,12 +1058,12 @@ tg
 gps
 www.travel
 listas
-Chelyabinsk-RNOC-RR02.BACKBONE
+chelyabinsk-rnoc-rr02.backbone
 hub
 demo3
 minecraft
 ns22
-HW70F395EB456E
+hw70f395eb456e
 dns01
 wpad
 nm
@@ -1173,7 +1172,6 @@ simple
 e-learning
 fire
 cb
-WWW
 edi
 rsc
 yellow
@@ -1709,16 +1707,14 @@ donate
 s9
 ftps
 falcon
-DomainDnsZones
 depot
-NS1
 genesis
 mysql4
 rms
 ns30
 www.drupal
 wholesale
-ForestDnsZones
+forestdnszones
 www.alumni
 marketplace
 tesla
@@ -1730,7 +1726,6 @@ gift
 shell
 www.dev2
 apply
-forestdnszones
 nc
 kronos
 epsilon
@@ -1968,7 +1963,6 @@ csg
 mi
 url
 dl2
-NS2
 show
 www.classifieds
 mexico
@@ -2142,7 +2136,7 @@ mu
 dhcp.pilsnet
 dot
 xenon
-CSR21.net
+csr21.net
 horizon
 vp
 centos
@@ -2697,7 +2691,6 @@ mail04
 schedule
 ww5
 servidor
-m.
 ivan
 serenity
 dave
@@ -2792,7 +2785,6 @@ mel
 as1
 www.x
 cricket
-ns2.cl.bellsouth.net.
 georgia
 callisto
 exch
@@ -2880,9 +2872,7 @@ turkey
 www.hotel
 ecom
 tours
-ns1.viviotech.net.
 product
-ns2.viviotech.net.
 www.reseller
 indiana
 mercedes
@@ -3047,7 +3037,6 @@ mysql7
 jack
 vladimir
 search1
-ns3.cl.bellsouth.net.
 promotion
 plaza
 devtest
@@ -3267,7 +3256,7 @@ www.hk
 vela
 surf
 summer
-CSR11.net
+csr11.net
 beijing
 bingo
 www.jp
@@ -3279,7 +3268,7 @@ ecology
 engineering
 tomsk
 iss
-CSR12.net
+csr12.net
 s26
 utility
 pac
@@ -3320,7 +3309,7 @@ impact
 laura
 qmail
 fuji
-CSR31.net
+csr31.net
 archer
 robo
 shiva
@@ -3416,7 +3405,6 @@ graph
 ld
 rec
 www.temp
-CISCO-LWAPP-CONTROLLER
 bach
 melody
 cygnus
@@ -3758,7 +3746,7 @@ wap2
 s35
 anketa
 www.dav75.users
-anhTH
+anhth
 montana
 sierracharlie.users
 sp2
@@ -4078,9 +4066,6 @@ boards
 thumb
 autodiscover.staging
 carmen
-ferrari.fortwayne.com.
-jordan.fortwayne.com.
-quatro.oweb.com.
 gazeta
 www.test3
 manga
@@ -4442,7 +4427,7 @@ ivanovo
 big5
 egitim
 he
-UNREGISTERED.zmc
+unregistered.zmc
 amanda
 orchid
 kit
@@ -4656,7 +4641,6 @@ xz
 utm
 s40
 panorama
-CISCO-CAPWAP-CONTROLLER
 photon
 vas
 war
@@ -4998,3 +4982,19 @@ vo
 www.msk
 pc2
 schools
+s102
+pittsburgh
+s101
+rw
+ozone
+common-sw2
+ragnarok
+venezuela
+ntp0
+osaka
+wx
+the
+www.register
+wh
+common-sw
+privacy
