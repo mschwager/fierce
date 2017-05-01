@@ -4,6 +4,7 @@ import ipaddress
 import unittest
 import unittest.mock
 
+import dns.exception
 import dns.name
 import dns.resolver
 
@@ -210,6 +211,33 @@ class TestFierce(unittest.TestCase):
 
         mock_method.assert_has_calls(expected)
         self.assertEqual(result, good_response)
+
+    def test_query_nxdomain(self):
+        resolver = dns.resolver.Resolver()
+        domain = dns.name.from_text('example.com.')
+
+        with unittest.mock.patch.object(resolver, 'query', side_effect=dns.resolver.NXDOMAIN()):
+            result = fierce.query(resolver, domain)
+
+        self.assertIs(result, None)
+
+    def test_query_no_nameservers(self):
+        resolver = dns.resolver.Resolver()
+        domain = dns.name.from_text('example.com.')
+
+        with unittest.mock.patch.object(resolver, 'query', side_effect=dns.resolver.NoNameservers()):
+            result = fierce.query(resolver, domain)
+
+        self.assertIs(result, None)
+
+    def test_query_timeout(self):
+        resolver = dns.resolver.Resolver()
+        domain = dns.name.from_text('example.com.')
+
+        with unittest.mock.patch.object(resolver, 'query', side_effect=dns.exception.Timeout()):
+            result = fierce.query(resolver, domain)
+
+        self.assertIs(result, None)
 
 
 if __name__ == "__main__":

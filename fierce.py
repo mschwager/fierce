@@ -10,6 +10,7 @@ import random
 import socket
 import time
 
+import dns.exception
 import dns.name
 import dns.query
 import dns.resolver
@@ -110,7 +111,7 @@ def query(resolver, domain, record_type='A'):
             return query(resolver, domain, record_type)
 
         return None
-    except (dns.resolver.NXDOMAIN, dns.resolver.NoNameservers):
+    except (dns.resolver.NXDOMAIN, dns.resolver.NoNameservers, dns.exception.Timeout):
         return None
 
 
