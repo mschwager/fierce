@@ -120,7 +120,6 @@ def reverse_query(resolver, ip):
 
 
 def recursive_query(resolver, domain, record_type='NS'):
-
     query_domain = str(domain)
     query_response = None
     try:
@@ -404,6 +403,7 @@ def main():
     args = parse_args()
 
     fierce(**vars(args))
+
 
 if __name__ == "__main__":
     main()

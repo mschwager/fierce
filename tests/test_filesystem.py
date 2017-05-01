@@ -69,10 +69,11 @@ class TestFilesystem(fake_filesystem_unittest.TestCase):
     def test_update_resolver_nameservers_no_nameserver_use_file(self):
         nameserver_filename = os.path.join("directory", "nameservers")
         nameservers = []
-        contents = textwrap.dedent("""nameserver1
+        contents = textwrap.dedent("""
+        nameserver1
         nameserver2
         nameserver3
-        """)
+        """.strip())
 
         self.fs.CreateFile(
             nameserver_filename,
@@ -93,10 +94,11 @@ class TestFilesystem(fake_filesystem_unittest.TestCase):
     def test_update_resolver_nameservers_prefer_nameservers_over_file(self):
         nameserver_filename = os.path.join("directory", "nameservers")
         nameservers = ['192.168.1.1', '192.168.1.2']
-        contents = textwrap.dedent("""nameserver1
+        contents = textwrap.dedent("""
+        nameserver1
         nameserver2
         nameserver3
-        """)
+        """.strip())
 
         self.fs.CreateFile(
             nameserver_filename,
@@ -153,10 +155,11 @@ class TestFilesystem(fake_filesystem_unittest.TestCase):
     def test_get_subdomains_no_subdomains_use_file(self):
         subdomain_filename = os.path.join("directory", "subdomains")
         subdomains = []
-        contents = textwrap.dedent("""sd1.domain.com
+        contents = textwrap.dedent("""
+        sd1.domain.com
         sd2.domain.com
         sd3.domain.com
-        """)
+        """.strip())
 
         self.fs.CreateFile(
             subdomain_filename,
@@ -174,10 +177,11 @@ class TestFilesystem(fake_filesystem_unittest.TestCase):
     def test_get_subdomains_prefer_subdomains_over_file(self):
         subdomain_filename = os.path.join("directory", "subdomains")
         subdomains = ['192.168.1.1', '192.168.1.2']
-        contents = textwrap.dedent("""sd1.domain.com
+        contents = textwrap.dedent("""
+        sd1.domain.com
         sd2.domain.com
         sd3.domain.com
-        """)
+        """.strip())
 
         self.fs.CreateFile(
             subdomain_filename,
