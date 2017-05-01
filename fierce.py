@@ -80,7 +80,7 @@ def concatenate_subdomains(domain, subdomains):
     subdomains = [
         nested_subdomain
         for subdomain in subdomains
-        for nested_subdomain in subdomain.split('.')
+        for nested_subdomain in subdomain.strip('.').split('.')
     ]
 
     result = dns.name.Name(tuple(subdomains) + domain.labels)

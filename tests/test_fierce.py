@@ -67,6 +67,15 @@ class TestFierce(unittest.TestCase):
 
         self.assertEqual(expected, result)
 
+    def test_concatenate_subdomains_fqdn_subdomain(self):
+        domain = dns.name.from_text("example.")
+        subdomains = ["sd1.sd2."]
+
+        result = fierce.concatenate_subdomains(domain, subdomains)
+        expected = dns.name.from_text("sd1.sd2.example.")
+
+        self.assertEqual(expected, result)
+
     def test_traverse_expander_basic(self):
         ip = ipaddress.IPv4Address('192.168.1.1')
         expand = 1
