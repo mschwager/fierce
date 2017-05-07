@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 This project adheres to [CHANGELOG](http://keepachangelog.com/).
 
+## [1.2.0] - 2017-05-07
+### Added
+- Official Python 3.6 support
+
+### Fixed
+- Handling of subdomains specified that are actually FQDNs
+- Gracefully handling timeouts when querying nameservers
+- Gracefully handling timeouts when querying zone transfers
+
 ## [1.1.5] - 2017-01-08
 ### Fixed
 - Fixed bug with CNAME records pointing to an A record without an associated IP
