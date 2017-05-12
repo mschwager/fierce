@@ -169,7 +169,7 @@ class TestFierce(unittest.TestCase):
         ]
 
         mock_method.assert_has_calls(expected)
-        self.assertIs(result, None)
+        self.assertIsNone(result)
 
     def test_recursive_query_long_domain_failure(self):
         resolver = dns.resolver.Resolver()
@@ -188,7 +188,7 @@ class TestFierce(unittest.TestCase):
         ]
 
         mock_method.assert_has_calls(expected)
-        self.assertIs(result, None)
+        self.assertIsNone(result)
 
     def test_recursive_query_basic_success(self):
         resolver = dns.resolver.Resolver()
@@ -219,7 +219,7 @@ class TestFierce(unittest.TestCase):
         with unittest.mock.patch.object(resolver, 'query', side_effect=dns.resolver.NXDOMAIN()):
             result = fierce.query(resolver, domain)
 
-        self.assertIs(result, None)
+        self.assertIsNone(result)
 
     def test_query_no_nameservers(self):
         resolver = dns.resolver.Resolver()
@@ -228,7 +228,7 @@ class TestFierce(unittest.TestCase):
         with unittest.mock.patch.object(resolver, 'query', side_effect=dns.resolver.NoNameservers()):
             result = fierce.query(resolver, domain)
 
-        self.assertIs(result, None)
+        self.assertIsNone(result)
 
     def test_query_timeout(self):
         resolver = dns.resolver.Resolver()
@@ -237,7 +237,7 @@ class TestFierce(unittest.TestCase):
         with unittest.mock.patch.object(resolver, 'query', side_effect=dns.exception.Timeout()):
             result = fierce.query(resolver, domain)
 
-        self.assertIs(result, None)
+        self.assertIsNone(result)
 
     def test_zone_transfer_connection_error(self):
         address = 'test'
@@ -246,7 +246,7 @@ class TestFierce(unittest.TestCase):
         with unittest.mock.patch.object(fierce.dns.zone, 'from_xfr', side_effect=ConnectionError()):
             result = fierce.zone_transfer(address, domain)
 
-        self.assertIs(result, None)
+        self.assertIsNone(result)
 
     def test_zone_transfer_eof_error(self):
         address = 'test'
@@ -255,7 +255,7 @@ class TestFierce(unittest.TestCase):
         with unittest.mock.patch.object(fierce.dns.zone, 'from_xfr', side_effect=EOFError()):
             result = fierce.zone_transfer(address, domain)
 
-        self.assertIs(result, None)
+        self.assertIsNone(result)
 
     def test_zone_transfer_timeout_error(self):
         address = 'test'
@@ -264,7 +264,7 @@ class TestFierce(unittest.TestCase):
         with unittest.mock.patch.object(fierce.dns.zone, 'from_xfr', side_effect=TimeoutError()):
             result = fierce.zone_transfer(address, domain)
 
-        self.assertIs(result, None)
+        self.assertIsNone(result)
 
     def test_zone_transfer_form_error(self):
         address = 'test'
@@ -273,7 +273,7 @@ class TestFierce(unittest.TestCase):
         with unittest.mock.patch.object(fierce.dns.zone, 'from_xfr', side_effect=dns.exception.FormError()):
             result = fierce.zone_transfer(address, domain)
 
-        self.assertIs(result, None)
+        self.assertIsNone(result)
 
 
 if __name__ == "__main__":
