@@ -396,7 +396,10 @@ def parse_args():
 def main():
     args = parse_args()
 
-    fierce(**vars(args))
+    try:
+        fierce(**vars(args))
+    except KeyboardInterrupt:
+        pass
 
 
 if __name__ == "__main__":
