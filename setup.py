@@ -43,9 +43,7 @@ setup(
             'fierce = fierce:main',
         ],
     },
-    package_data={
-        'fierce': [
-            'lists/*',
-        ]
-    },
+    data_files=[
+        ('lists', data_files_lists),
+    ],
 )
