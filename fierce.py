@@ -38,16 +38,28 @@ def find_subdomain_list_file(filename):
     #
     #     https://github.com/pypa/pip/blob/master/pip/commands/show.py
     #
-    package_filename_path = os.path.join("lists", filename)
     try:
-        full_package_path = pkg_resources.resource_filename(
-            'fierce',
-            package_filename_path
-        )
-    except ImportError:
+        fierce = pkg_resources.get_distribution('fierce')
+    except pkg_resources.DistributionNotFound:
         return filename
 
-    return full_package_path
+    if isinstance(fierce, pkg_resources.Distribution):
+        paths = []
+        if fierce.has_metadata('RECORD'):
+            lines = fierce.get_metadata_lines('RECORD')
+            paths = [l.split(',')[0] for l in lines]
+            paths = [os.path.join(fierce.location, p) for p in paths]
+        elif fierce.has_metadata('installed-files.txt'):
+            lines = fierce.get_metadata_lines('installed-files.txt')
+            paths = [l for l in lines]
+            paths = [os.path.join(fierce.egg_info, p) for p in paths]
+
+        for p in paths:
+            if filename == os.path.basename(p):
+                return p
+
+    # If we couldn't find anything just return the original list file
+    return filename
 
 
 def head_request(url, timeout=2):
@@ -174,13 +186,7 @@ def get_stripped_file_lines(filename):
     """
     Return lines of a file with whitespace removed
     """
-    try:
-        lines = [line.strip() for line in open(filename).readlines()]
-    except FileNotFoundError:
-        print("Could not find subdomain file '{}'".format(filename))
-        return []
-
-    return lines
+    return [line.strip() for line in open(filename).readlines()]
 
 
 def get_subdomains(subdomains, subdomain_filename):
