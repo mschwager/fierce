@@ -33,33 +33,16 @@ def find_subdomain_list_file(filename):
     # If the relative check failed then attempt to find the list file
     # in the pip package directory. This will typically happen on pip package
     # installs (duh)
-    #
-    # Here's how pip itself handles this:
-    #
-    #     https://github.com/pypa/pip/blob/master/pip/commands/show.py
-    #
+    package_filename_path = os.path.join("lists", filename)
     try:
-        fierce = pkg_resources.get_distribution('fierce')
-    except pkg_resources.DistributionNotFound:
+        full_package_path = pkg_resources.resource_filename(
+            "fierce",
+            package_filename_path
+        )
+    except ImportError:
         return filename
 
-    if isinstance(fierce, pkg_resources.Distribution):
-        paths = []
-        if fierce.has_metadata('RECORD'):
-            lines = fierce.get_metadata_lines('RECORD')
-            paths = [l.split(',')[0] for l in lines]
-            paths = [os.path.join(fierce.location, p) for p in paths]
-        elif fierce.has_metadata('installed-files.txt'):
-            lines = fierce.get_metadata_lines('installed-files.txt')
-            paths = [l for l in lines]
-            paths = [os.path.join(fierce.egg_info, p) for p in paths]
-
-        for p in paths:
-            if filename == os.path.basename(p):
-                return p
-
-    # If we couldn't find anything just return the original list file
-    return filename
+    return full_package_path
 
 
 def head_request(url, timeout=2):
