@@ -8,7 +8,7 @@ import dns.resolver
 
 from pyfakefs import fake_filesystem_unittest
 
-import fierce
+from fierce import fierce
 
 
 class TestFilesystem(fake_filesystem_unittest.TestCase):

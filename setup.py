@@ -14,14 +14,13 @@ requirements_dev_filename = os.path.join(
 with open(requirements_filename) as fd:
     tests_require = [i.strip() for i in fd.readlines()]
 
-data_files_lists = [os.path.join('lists', l) for l in os.listdir('lists')]
-
 setup(
     name='fierce',
     version='1.2.0',
     description='A DNS reconnaissance tool for locating non-contiguous IP space.',
     url='https://github.com/mschwager/fierce',
-    py_modules=['fierce'],
+    packages=['fierce'],
+    package_dir={'fierce': 'fierce'},
     license='GPLv3',
     classifiers=[
         'Environment :: Console',
@@ -40,10 +39,12 @@ setup(
     tests_require=tests_require,
     entry_points={
         'console_scripts': [
-            'fierce = fierce:main',
+            'fierce = fierce.fierce:main',
         ],
     },
-    data_files=[
-        ('lists', data_files_lists),
-    ],
+    package_data={
+        'fierce': [
+            'lists/*.txt',
+        ],
+    },
 )

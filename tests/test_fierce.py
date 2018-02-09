@@ -8,7 +8,7 @@ import dns.exception
 import dns.name
 import dns.resolver
 
-import fierce
+from fierce import fierce
 
 
 class TestFierce(unittest.TestCase):
