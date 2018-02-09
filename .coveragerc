@@ -1,2 +1,2 @@
 [run]
-include = fierce.py
+include = fierce/fierce.py
