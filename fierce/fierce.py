@@ -6,6 +6,7 @@ import functools
 import http.client
 import ipaddress
 import itertools
+import multiprocessing
 import os
 import pprint
 import random
@@ -156,7 +157,10 @@ def search_filter(domains, address):
 def find_nearby(resolver, ips, filter_func=None):
     str_ips = [str(ip) for ip in ips]
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    # https://docs.python.org/3.5/library/concurrent.futures.html#concurrent.futures.ThreadPoolExecutor
+    max_workers = multiprocessing.cpu_count() * 5
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
         reversed_ips = {
             ip: query_result
             for ip, query_result in zip(
