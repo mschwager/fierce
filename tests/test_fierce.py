@@ -275,6 +275,72 @@ class TestFierce(unittest.TestCase):
 
         self.assertIsNone(result)
 
+    def test_find_nearby_empty(self):
+        resolver = 'unused'
+        ips = []
+
+        result = fierce.find_nearby(resolver, ips)
+        expected = {}
+
+        self.assertEqual(expected, result)
+
+    def test_find_nearby_basic(self):
+        resolver = 'unused'
+        ips = [
+            ipaddress.IPv4Address('192.168.1.0'),
+            ipaddress.IPv4Address('192.168.1.1'),
+        ]
+        side_effect = [
+            'sd1.example.com.',
+            'sd2.example.com.',
+        ]
+
+        with unittest.mock.patch.object(fierce, 'reverse_query', side_effect=side_effect):
+            result = fierce.find_nearby(resolver, ips)
+
+        expected = {
+            '192.168.1.0': 'sd1.example.com.',
+            '192.168.1.1': 'sd2.example.com.',
+        }
+
+        self.assertEqual(expected, result)
+
+    def test_find_nearby_filter_func(self):
+        resolver = 'unused'
+        ips = [
+            ipaddress.IPv4Address('192.168.1.0'),
+            ipaddress.IPv4Address('192.168.1.1'),
+        ]
+
+        # Simply getting a dns.resolver.Answer with a specific result was
+        # more difficult than I'd like, let's just go with this less than
+        # ideal approach for now
+        class MockAnswer(object):
+            def __init__(self, response):
+                self.response = response
+
+            def to_text(self):
+                return self.response
+
+        returned_answer = [MockAnswer('sd1.example.com.')]
+
+        side_effect = [
+            returned_answer,
+            [MockAnswer('sd2.example.com.')],
+        ]
+
+        def filter_func(reverse_result):
+            return reverse_result == 'sd1.example.com.'
+
+        with unittest.mock.patch.object(fierce, 'reverse_query', side_effect=side_effect):
+            result = fierce.find_nearby(resolver, ips, filter_func=filter_func)
+
+        expected = {
+            '192.168.1.0': returned_answer,
+        }
+
+        self.assertEqual(expected, result)
+
 
 if __name__ == "__main__":
     unittest.main()
