@@ -406,7 +406,7 @@ def main():
     try:
         fierce(**vars(args))
     except KeyboardInterrupt:
-        pass
+        print("Exiting...")
 
 
 if __name__ == "__main__":
