@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
 import argparse
+import concurrent.futures
 import functools
 import http.client
 import ipaddress
+import itertools
 import os
 import pprint
 import random
@@ -152,17 +154,27 @@ def search_filter(domains, address):
 
 
 def find_nearby(resolver, ips, filter_func=None):
-    reversed_ips = {str(i): reverse_query(resolver, str(i)) for i in ips}
+    str_ips = [str(ip) for ip in ips]
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        reversed_ips = {
+            ip: query_result
+            for ip, query_result in zip(
+                str_ips,
+                executor.map(
+                    reverse_query,
+                    itertools.repeat(resolver, len(str_ips)),
+                    str_ips
+                )
+            )
+        }
+
     reversed_ips = {k: v for k, v in reversed_ips.items() if v is not None}
 
     if filter_func:
         reversed_ips = {k: v for k, v in reversed_ips.items() if v and filter_func(v[0].to_text())}
 
-    if not reversed_ips:
-        return
-
-    print("Nearby:")
-    pprint.pprint({k: v[0].to_text() for k, v in reversed_ips.items() if v})
+    return reversed_ips
 
 
 def get_stripped_file_lines(filename):
@@ -216,7 +228,10 @@ def fierce(**kwargs):
 
     if kwargs.get("range"):
         internal_range = ipaddress.IPv4Network(kwargs.get("range"))
-        find_nearby(resolver, list(internal_range))
+        nearby_ips = find_nearby(resolver, list(internal_range))
+        if nearby_ips:
+            print("Nearby:")
+            pprint.pprint({k: v[0].to_text() for k, v in nearby_ips.items() if v})
 
     if not kwargs.get("domain"):
         return
@@ -293,7 +308,10 @@ def fierce(**kwargs):
         ips = set(ips) - set(visited)
         visited |= ips
 
-        find_nearby(resolver, ips, filter_func=filter_func)
+        nearby_ips = find_nearby(resolver, ips, filter_func=filter_func)
+        if nearby_ips:
+            print("Nearby:")
+            pprint.pprint({k: v[0].to_text() for k, v in nearby_ips.items() if v})
 
         if kwargs.get("delay"):
             time.sleep(kwargs["delay"])
