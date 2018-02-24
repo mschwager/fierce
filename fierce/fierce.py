@@ -34,6 +34,18 @@ def print_subdomain_result(url, ip, http_connection_headers=None, nearby=None, s
         pprint.pprint(nearby, stream=stream)
 
 
+def unvisited_closure():
+    visited = set()
+
+    def inner(l):
+        nonlocal visited
+        result = l.difference(visited)
+        visited.update(l)
+        return result
+
+    return inner
+
+
 def find_subdomain_list_file(filename):
     # First check the list directory relative to where we are. This
     # will typically happen if they simply cloned the Github repository
@@ -293,7 +305,7 @@ def fierce(**kwargs):
         kwargs["subdomain_file"]
     )
 
-    visited = set()
+    get_unvisited = unvisited_closure()
 
     for subdomain in subdomains:
         url = concatenate_subdomains(domain, [subdomain])
@@ -319,8 +331,7 @@ def fierce(**kwargs):
         else:
             ips = []
 
-        ips = set(ips) - set(visited)
-        visited |= ips
+        ips = get_unvisited(ips)
 
         nearby_ips = find_nearby(resolver, ips, filter_func=filter_func)
 

@@ -420,6 +420,33 @@ class TestFierce(unittest.TestCase):
 
         self.assertEqual(expected, result)
 
+    def test_unvisited_closure_empty(self):
+        unvisited = fierce.unvisited_closure()
+        ips = set()
+
+        result = unvisited(ips)
+        expected = set()
+
+        self.assertEqual(expected, result)
+
+    def test_unvisited_closure_empty_intersection(self):
+        unvisited = fierce.unvisited_closure()
+
+        unvisited(set([1, 2, 3]))
+        result = unvisited(set([4, 5, 6]))
+        expected = set([4, 5, 6])
+
+        self.assertEqual(expected, result)
+
+    def test_unvisited_closure_overlapping_intersection(self):
+        unvisited = fierce.unvisited_closure()
+
+        unvisited(set([1, 2, 3]))
+        result = unvisited(set([2, 3, 4]))
+        expected = set([4])
+
+        self.assertEqual(expected, result)
+
 
 if __name__ == "__main__":
     unittest.main()
