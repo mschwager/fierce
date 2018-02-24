@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 import ipaddress
+import io
+import textwrap
 import unittest
 import unittest.mock
 
@@ -338,6 +340,83 @@ class TestFierce(unittest.TestCase):
         expected = {
             '192.168.1.0': returned_answer,
         }
+
+        self.assertEqual(expected, result)
+
+    def test_print_subdomain_result_basic(self):
+        url = 'example.com'
+        ip = '192.168.1.0'
+
+        with io.StringIO() as stream:
+            fierce.print_subdomain_result(url, ip, stream=stream)
+            result = stream.getvalue()
+
+        expected = 'Found: example.com (192.168.1.0)\n'
+
+        self.assertEqual(expected, result)
+
+    def test_print_subdomain_result_nearby(self):
+        url = 'example.com'
+        ip = '192.168.1.0'
+        nearby = {'192.168.1.1': 'nearby.com'}
+
+        with io.StringIO() as stream:
+            fierce.print_subdomain_result(url, ip, nearby=nearby, stream=stream)
+            result = stream.getvalue()
+
+        expected = textwrap.dedent('''
+            Found: example.com (192.168.1.0)
+            Nearby:
+            {'192.168.1.1': 'nearby.com'}
+        ''').lstrip()
+
+        self.assertEqual(expected, result)
+
+    def test_print_subdomain_result_http_header(self):
+        url = 'example.com'
+        ip = '192.168.1.0'
+        http_connection_headers = {'HTTP HEADER': 'value'}
+
+        with io.StringIO() as stream:
+            fierce.print_subdomain_result(
+                url,
+                ip,
+                http_connection_headers=http_connection_headers,
+                stream=stream
+            )
+            result = stream.getvalue()
+
+        expected = textwrap.dedent('''
+            Found: example.com (192.168.1.0)
+            HTTP connected:
+            {'HTTP HEADER': 'value'}
+        ''').lstrip()
+
+        self.assertEqual(expected, result)
+
+    def test_print_subdomain_result_both(self):
+        url = 'example.com'
+        ip = '192.168.1.0'
+        http_connection_headers = {'HTTP HEADER': 'value'}
+        nearby = {'192.168.1.1': 'nearby.com'}
+
+        with io.StringIO() as stream:
+            fierce.print_subdomain_result(
+                url,
+                ip,
+                http_connection_headers=http_connection_headers,
+                nearby=nearby,
+                stream=stream
+            )
+            result = stream.getvalue()
+
+        expected = textwrap.dedent('''
+            Found: example.com (192.168.1.0)
+            HTTP connected:
+            {'HTTP HEADER': 'value'}
+            Nearby:
+            {'192.168.1.1': 'nearby.com'}
+        ''').lstrip()
 
         self.assertEqual(expected, result)
 

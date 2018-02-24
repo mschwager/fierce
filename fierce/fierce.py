@@ -11,6 +11,7 @@ import os
 import pprint
 import random
 import socket
+import sys
 import time
 
 import dns.exception
@@ -19,6 +20,18 @@ import dns.query
 import dns.resolver
 import dns.reversename
 import dns.zone
+
+
+def print_subdomain_result(url, ip, http_connection_headers=None, nearby=None, stream=sys.stdout):
+    print("Found: {} ({})".format(url, ip), file=stream)
+
+    if http_connection_headers:
+        print("HTTP connected:", file=stream)
+        pprint.pprint(http_connection_headers, stream=stream)
+
+    if nearby:
+        print("Nearby:", file=stream)
+        pprint.pprint(nearby, stream=stream)
 
 
 def find_subdomain_list_file(filename):
@@ -290,32 +303,37 @@ def fierce(**kwargs):
             continue
 
         ip = ipaddress.IPv4Address(record[0].address)
-        print("Found: {} ({})".format(url, ip))
 
+        http_connection_headers = None
         if kwargs.get('connect') and not ip.is_private:
-            headers = head_request(str(ip))
-            if headers:
-                print("HTTP connected:")
-                pprint.pprint(headers)
+            http_connection_headers = head_request(str(ip))
+
+        filter_func = None
+        if kwargs.get("search"):
+            filter_func = functools.partial(search_filter, kwargs["search"])
 
         if kwargs.get("wide"):
             ips = wide_expander(ip)
         elif kwargs.get("traverse"):
             ips = traverse_expander(ip, kwargs["traverse"])
         else:
-            continue
-
-        filter_func = None
-        if kwargs.get("search"):
-            filter_func = functools.partial(search_filter, kwargs["search"])
+            ips = []
 
         ips = set(ips) - set(visited)
         visited |= ips
 
         nearby_ips = find_nearby(resolver, ips, filter_func=filter_func)
+
+        nearby = None
         if nearby_ips:
-            print("Nearby:")
-            pprint.pprint({k: v[0].to_text() for k, v in nearby_ips.items() if v})
+            nearby = {k: v[0].to_text() for k, v in nearby_ips.items() if v}
+
+        print_subdomain_result(
+            url,
+            ip,
+            http_connection_headers=http_connection_headers,
+            nearby=nearby
+        )
 
         if kwargs.get("delay"):
             time.sleep(kwargs["delay"])
