@@ -39,7 +39,7 @@ def unvisited_closure():
 
     def inner(l):
         nonlocal visited
-        result = l.difference(visited)
+        result = set(l).difference(visited)
         visited.update(l)
         return result
 
