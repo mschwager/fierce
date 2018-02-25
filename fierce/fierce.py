@@ -158,6 +158,10 @@ def get_class_c_network(ip):
     return class_c
 
 
+def default_expander(ip):
+    return [ip]
+
+
 def traverse_expander(ip, n=5):
     class_c = get_class_c_network(ip)
 
@@ -175,11 +179,26 @@ def wide_expander(ip):
     return result
 
 
+def range_expander(ip):
+    network = ipaddress.IPv4Network(ip)
+
+    result = list(network)
+
+    return result
+
+
+def default_filter(address):
+    return True
+
+
 def search_filter(domains, address):
     return any(domain in address for domain in domains)
 
 
 def find_nearby(resolver, ips, filter_func=None):
+    if filter_func is None:
+        filter_func = default_filter
+
     str_ips = [str(ip) for ip in ips]
 
     # https://docs.python.org/3.5/library/concurrent.futures.html#concurrent.futures.ThreadPoolExecutor
@@ -198,10 +217,11 @@ def find_nearby(resolver, ips, filter_func=None):
             )
         }
 
-    reversed_ips = {k: v for k, v in reversed_ips.items() if v is not None}
-
-    if filter_func:
-        reversed_ips = {k: v for k, v in reversed_ips.items() if v and filter_func(v[0].to_text())}
+    reversed_ips = {
+        k: v
+        for k, v in reversed_ips.items()
+        if v is not None and filter_func(v[0].to_text())
+    }
 
     return reversed_ips
 
@@ -256,8 +276,11 @@ def fierce(**kwargs):
     )
 
     if kwargs.get("range"):
-        internal_range = ipaddress.IPv4Network(kwargs.get("range"))
-        nearby_ips = find_nearby(resolver, list(internal_range))
+        range_ips = range_expander(kwargs.get("range"))
+        nearby_ips = find_nearby(
+            resolver,
+            range_ips,
+        )
         if nearby_ips:
             print("Nearby:")
             pprint.pprint({k: v[0].to_text() for k, v in nearby_ips.items() if v})
@@ -305,7 +328,17 @@ def fierce(**kwargs):
         kwargs["subdomain_file"]
     )
 
-    get_unvisited = unvisited_closure()
+    filter_func = None
+    if kwargs.get("search"):
+        filter_func = functools.partial(search_filter, kwargs["search"])
+
+    expander_func = default_expander
+    if kwargs.get("wide"):
+        expander_func = wide_expander
+    elif kwargs.get("traverse"):
+        expander_func = functools.partial(traverse_expander, n=kwargs["traverse"])
+
+    unvisited = unvisited_closure()
 
     for subdomain in subdomains:
         url = concatenate_subdomains(domain, [subdomain])
@@ -320,20 +353,14 @@ def fierce(**kwargs):
         if kwargs.get('connect') and not ip.is_private:
             http_connection_headers = head_request(str(ip))
 
-        filter_func = None
-        if kwargs.get("search"):
-            filter_func = functools.partial(search_filter, kwargs["search"])
+        ips = expander_func(ip)
+        unvisited_ips = unvisited(ips)
 
-        if kwargs.get("wide"):
-            ips = wide_expander(ip)
-        elif kwargs.get("traverse"):
-            ips = traverse_expander(ip, kwargs["traverse"])
-        else:
-            ips = []
-
-        ips = get_unvisited(ips)
-
-        nearby_ips = find_nearby(resolver, ips, filter_func=filter_func)
+        nearby_ips = find_nearby(
+            resolver,
+            unvisited_ips,
+            filter_func=filter_func
+        )
 
         nearby = None
         if nearby_ips:

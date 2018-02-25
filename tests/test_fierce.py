@@ -13,6 +13,17 @@ import dns.resolver
 from fierce import fierce
 
 
+# Simply getting a dns.resolver.Answer with a specific result was
+# more difficult than I'd like, let's just go with this less than
+# ideal approach for now
+class MockAnswer(object):
+    def __init__(self, response):
+        self.response = response
+
+    def to_text(self):
+        return self.response
+
+
 class TestFierce(unittest.TestCase):
 
     def test_concatenate_subdomains_empty(self):
@@ -76,6 +87,16 @@ class TestFierce(unittest.TestCase):
 
         result = fierce.concatenate_subdomains(domain, subdomains)
         expected = dns.name.from_text("sd1.sd2.example.")
+
+        self.assertEqual(expected, result)
+
+    def test_default_expander(self):
+        ip = ipaddress.IPv4Address('192.168.1.1')
+
+        result = fierce.default_expander(ip)
+        expected = [
+            ipaddress.IPv4Address('192.168.1.1'),
+        ]
 
         self.assertEqual(expected, result)
 
@@ -152,6 +173,18 @@ class TestFierce(unittest.TestCase):
         expected = [
             ipaddress.IPv4Address('192.168.1.{}'.format(i))
             for i in range(256)
+        ]
+
+        self.assertEqual(expected, result)
+
+    def test_range_expander(self):
+        ip = '192.168.1.0/31'
+
+        result = fierce.range_expander(ip)
+
+        expected = [
+            ipaddress.IPv4Address('192.168.1.0'),
+            ipaddress.IPv4Address('192.168.1.1'),
         ]
 
         self.assertEqual(expected, result)
@@ -292,17 +325,19 @@ class TestFierce(unittest.TestCase):
             ipaddress.IPv4Address('192.168.1.0'),
             ipaddress.IPv4Address('192.168.1.1'),
         ]
+        returned_answer1 = [MockAnswer('sd1.example.com.')]
+        returned_answer2 = [MockAnswer('sd2.example.com.')]
         side_effect = [
-            'sd1.example.com.',
-            'sd2.example.com.',
+            returned_answer1,
+            returned_answer2,
         ]
 
         with unittest.mock.patch.object(fierce, 'reverse_query', side_effect=side_effect):
             result = fierce.find_nearby(resolver, ips)
 
         expected = {
-            '192.168.1.0': 'sd1.example.com.',
-            '192.168.1.1': 'sd2.example.com.',
+            '192.168.1.0': returned_answer1,
+            '192.168.1.1': returned_answer2,
         }
 
         self.assertEqual(expected, result)
@@ -313,19 +348,7 @@ class TestFierce(unittest.TestCase):
             ipaddress.IPv4Address('192.168.1.0'),
             ipaddress.IPv4Address('192.168.1.1'),
         ]
-
-        # Simply getting a dns.resolver.Answer with a specific result was
-        # more difficult than I'd like, let's just go with this less than
-        # ideal approach for now
-        class MockAnswer(object):
-            def __init__(self, response):
-                self.response = response
-
-            def to_text(self):
-                return self.response
-
         returned_answer = [MockAnswer('sd1.example.com.')]
-
         side_effect = [
             returned_answer,
             [MockAnswer('sd2.example.com.')],
@@ -446,6 +469,30 @@ class TestFierce(unittest.TestCase):
         expected = set([4])
 
         self.assertEqual(expected, result)
+
+    def test_search_filter_empty(self):
+        domains = []
+        address = 'test.example.com'
+
+        result = fierce.search_filter(domains, address)
+
+        self.assertFalse(result)
+
+    def test_search_filter_true(self):
+        domains = ['example.com']
+        address = 'test.example.com'
+
+        result = fierce.search_filter(domains, address)
+
+        self.assertTrue(result)
+
+    def test_search_filter_false(self):
+        domains = ['not.com']
+        address = 'test.example.com'
+
+        result = fierce.search_filter(domains, address)
+
+        self.assertFalse(result)
 
 
 if __name__ == "__main__":
