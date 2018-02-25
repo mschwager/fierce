@@ -325,19 +325,17 @@ class TestFierce(unittest.TestCase):
             ipaddress.IPv4Address('192.168.1.0'),
             ipaddress.IPv4Address('192.168.1.1'),
         ]
-        returned_answer1 = [MockAnswer('sd1.example.com.')]
-        returned_answer2 = [MockAnswer('sd2.example.com.')]
         side_effect = [
-            returned_answer1,
-            returned_answer2,
+            [MockAnswer('sd1.example.com.')],
+            [MockAnswer('sd2.example.com.')],
         ]
 
         with unittest.mock.patch.object(fierce, 'reverse_query', side_effect=side_effect):
             result = fierce.find_nearby(resolver, ips)
 
         expected = {
-            '192.168.1.0': returned_answer1,
-            '192.168.1.1': returned_answer2,
+            '192.168.1.0': 'sd1.example.com.',
+            '192.168.1.1': 'sd2.example.com.',
         }
 
         self.assertEqual(expected, result)
@@ -348,9 +346,8 @@ class TestFierce(unittest.TestCase):
             ipaddress.IPv4Address('192.168.1.0'),
             ipaddress.IPv4Address('192.168.1.1'),
         ]
-        returned_answer = [MockAnswer('sd1.example.com.')]
         side_effect = [
-            returned_answer,
+            [MockAnswer('sd1.example.com.')],
             [MockAnswer('sd2.example.com.')],
         ]
 
@@ -361,7 +358,7 @@ class TestFierce(unittest.TestCase):
             result = fierce.find_nearby(resolver, ips, filter_func=filter_func)
 
         expected = {
-            '192.168.1.0': returned_answer,
+            '192.168.1.0': 'sd1.example.com.',
         }
 
         self.assertEqual(expected, result)
