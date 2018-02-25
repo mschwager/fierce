@@ -22,6 +22,11 @@ import dns.reversename
 import dns.zone
 
 
+def fatal(msg, return_code=-1):
+    print(msg)
+    exit(return_code)
+
+
 def print_subdomain_result(url, ip, http_connection_headers=None, nearby=None, stream=sys.stdout):
     print("Found: {} ({})".format(url, ip), file=stream)
 
@@ -180,7 +185,10 @@ def wide_expander(ip):
 
 
 def range_expander(ip):
-    network = ipaddress.IPv4Network(ip)
+    try:
+        network = ipaddress.IPv4Network(ip)
+    except ipaddress.AddressValueError:
+        fatal("Invalid IPv4 CIDR: {!r}".format(ip))
 
     result = list(network)
 
@@ -309,8 +317,7 @@ def fierce(**kwargs):
         print("SOA: {} ({})".format(soa_mname, master_address))
     else:
         print("SOA: failure")
-        print("Failed to lookup NS/SOA, Domain does not exist")
-        exit(-1)
+        fatal("Failed to lookup NS/SOA, Domain does not exist")
 
     zone = zone_transfer(master_address, domain)
     print("Zone: {}".format("success" if zone else "failure"))
@@ -430,6 +437,7 @@ def parse_args():
         '--subdomain-file',
         action='store',
         default="default.txt",
+        type=argparse.FileType('r'),
         help='use subdomains specified in this file (one per line)'
     )
 
@@ -443,6 +451,7 @@ def parse_args():
     dns_group.add_argument(
         '--dns-file',
         action='store',
+        type=argparse.FileType('r'),
         help='use dns servers specified in this file for reverse lookups (one per line)'
     )
 
