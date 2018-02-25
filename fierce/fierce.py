@@ -238,7 +238,7 @@ def get_stripped_file_lines(filename):
     """
     Return lines of a file with whitespace removed
     """
-    return [line.strip() for line in open(filename).readlines()]
+    return [line.strip() for line in filename.readlines()]
 
 
 def get_subdomains(subdomains, subdomain_filename):
@@ -426,6 +426,10 @@ def parse_args():
         help='time to wait between lookups'
     )
 
+    # Attempt to intelligently find the subdomain list depending on
+    # how this library was installed.
+    default_subdomain_file = find_subdomain_list_file('default.txt')
+
     subdomain_group = p.add_mutually_exclusive_group()
     subdomain_group.add_argument(
         '--subdomains',
@@ -436,7 +440,7 @@ def parse_args():
     subdomain_group.add_argument(
         '--subdomain-file',
         action='store',
-        default="default.txt",
+        default=default_subdomain_file,
         type=argparse.FileType('r'),
         help='use subdomains specified in this file (one per line)'
     )
@@ -456,11 +460,6 @@ def parse_args():
     )
 
     args = p.parse_args()
-
-    # Attempt to intelligently find the subdomain list depending on
-    # how this library was installed.
-    if args.subdomain_file and not os.path.exists(args.subdomain_file):
-        args.subdomain_file = find_subdomain_list_file(args.subdomain_file)
 
     return args
 
