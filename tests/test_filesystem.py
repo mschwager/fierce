@@ -85,7 +85,7 @@ class TestFilesystem(fake_filesystem_unittest.TestCase):
         result = fierce.update_resolver_nameservers(
             resolver,
             nameservers,
-            open(nameserver_filename)
+            nameserver_filename
         )
 
         expected = contents.split()
@@ -110,7 +110,7 @@ class TestFilesystem(fake_filesystem_unittest.TestCase):
         result = fierce.update_resolver_nameservers(
             resolver,
             nameservers,
-            open(nameserver_filename)
+            nameserver_filename
         )
 
         expected = nameservers
@@ -168,7 +168,7 @@ class TestFilesystem(fake_filesystem_unittest.TestCase):
 
         result = fierce.get_subdomains(
             subdomains,
-            open(subdomain_filename)
+            subdomain_filename
         )
 
         expected = contents.split()
@@ -190,7 +190,7 @@ class TestFilesystem(fake_filesystem_unittest.TestCase):
 
         result = fierce.get_subdomains(
             subdomains,
-            open(subdomain_filename)
+            subdomain_filename
         )
 
         expected = subdomains
