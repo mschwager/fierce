@@ -16,7 +16,7 @@ with open(requirements_filename) as fd:
 
 setup(
     name='fierce',
-    version='1.2.0',
+    version='1.2.1',
     description='A DNS reconnaissance tool for locating non-contiguous IP space.',
     url='https://github.com/mschwager/fierce',
     packages=['fierce'],
