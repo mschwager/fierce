@@ -3,6 +3,19 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 This project adheres to [CHANGELOG](http://keepachangelog.com/).
 
+## [1.2.1] - 2018-03-01
+### Changed
+- Nearby IP reverse queries are now multithread, which improves performance significantly
+- Updated development dependencies
+- Subdomain lists use package_data instead of data_files
+
+### Added
+- Gracefully handle users exiting the script with Ctrl+C
+- Gracefully handle incorrect file or IP range arguments
+
+### Removed
+- Official Python 3.3 support, it's EOL
+
 ## [1.2.0] - 2017-05-07
 ### Added
 - Official Python 3.6 support
