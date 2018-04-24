@@ -45,6 +45,7 @@ setup(
     ],
     install_requires=install_requires,
     tests_require=tests_require,
+    python_requires='>=3.0',
     entry_points={
         'console_scripts': [
             'fierce = fierce.fierce:main',
