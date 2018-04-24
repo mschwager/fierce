@@ -385,7 +385,7 @@ def fierce(**kwargs):
             time.sleep(kwargs["delay"])
 
 
-def parse_args():
+def parse_args(args):
     p = argparse.ArgumentParser(description='''
         A DNS reconnaissance tool for locating non-contiguous IP space.
         ''', formatter_class=argparse.RawTextHelpFormatter)
@@ -458,7 +458,7 @@ def parse_args():
         help='use dns servers specified in this file for reverse lookups (one per line)'
     )
 
-    args = p.parse_args()
+    args = p.parse_args(args)
 
     # Attempt to intelligently find the subdomain list depending on
     # how this library was installed.
@@ -469,7 +469,7 @@ def parse_args():
 
 
 def main():
-    args = parse_args()
+    args = parse_args(sys.argv[1:])
 
     try:
         fierce(**vars(args))

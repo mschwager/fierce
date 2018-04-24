@@ -2,6 +2,7 @@
 
 import ipaddress
 import io
+import os
 import textwrap
 import unittest
 import unittest.mock
@@ -9,6 +10,8 @@ import unittest.mock
 import dns.exception
 import dns.name
 import dns.resolver
+
+from pyfakefs import fake_filesystem_unittest
 
 from fierce import fierce
 
@@ -490,6 +493,80 @@ class TestFierce(unittest.TestCase):
         result = fierce.search_filter(domains, address)
 
         self.assertFalse(result)
+
+
+class TestArgumentParsing(fake_filesystem_unittest.TestCase):
+
+    def test_parse_args_basic(self):
+        domain = 'example.com'
+
+        args = fierce.parse_args([
+            '--domain', domain,
+        ])
+        result = args.domain
+        expected = domain
+
+        self.assertEqual(expected, result)
+
+    def test_parse_args_included_list_file(self):
+        filename = '5000.txt'
+
+        args = fierce.parse_args([
+            '--domain', 'example.com',
+            '--subdomain-file', filename,
+
+        ])
+        result = args.subdomain_file
+        expected = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            'fierce',
+            'lists',
+            filename,
+        )
+        exists = os.path.exists(result)
+
+        self.assertEqual(expected, result)
+        self.assertTrue(exists)
+
+    def test_parse_args_missing_list_file(self):
+        filename = 'missing.txt'
+
+        args = fierce.parse_args([
+            '--domain', 'example.com',
+            '--subdomain-file', filename,
+
+        ])
+        result = args.subdomain_file
+        expected = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            'fierce',
+            'lists',
+            filename,
+        )
+        exists = os.path.exists(result)
+
+        self.assertEqual(expected, result)
+        self.assertFalse(exists)
+
+    def test_parse_args_custom_list_file(self):
+        self.setUpPyfakefs()
+
+        filename = os.path.join('test', 'custom.txt')
+        self.fs.CreateFile(
+            filename,
+            contents='subdomain'
+        )
+
+        args = fierce.parse_args([
+            '--domain', 'example.com',
+            '--subdomain-file', filename,
+        ])
+        result = args.subdomain_file
+        expected = filename
+        exists = os.path.exists(result)
+
+        self.assertEqual(expected, result)
+        self.assertTrue(exists)
 
 
 if __name__ == "__main__":
