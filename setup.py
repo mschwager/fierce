@@ -22,7 +22,7 @@ with open(long_description_filename) as fd:
 
 setup(
     name='fierce',
-    version='1.2.1',
+    version='1.2.2',
     description='A DNS reconnaissance tool for locating non-contiguous IP space.',
     long_description=long_description,
     long_description_content_type='text/markdown',

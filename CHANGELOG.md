@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 This project adheres to [CHANGELOG](http://keepachangelog.com/).
 
+## [1.2.2] - 2018-04-24
+### Changed
+- Python 3 is now a requirement when installing via setup.py (including pip)
+- The README markdown is now included in the package's long description
+
 ## [1.2.1] - 2018-03-01
 ### Changed
 - Nearby IP reverse queries are now multithread, which improves performance significantly
