@@ -333,7 +333,7 @@ def fierce(**kwargs):
     random_subdomain = str(random.randint(1e10, 1e11))
     random_domain = concatenate_subdomains(domain, [random_subdomain])
     wildcard = query(resolver, random_domain, record_type='A')
-    wildcard_ips = set([rr.address for rr in wildcard.rrset]) if wildcard else None
+    wildcard_ips = set(rr.address for rr in wildcard.rrset) if wildcard else set()
     print("Wildcard: {}".format(', '.join(wildcard_ips) if wildcard_ips else "failure"))
 
     subdomains = get_subdomains(
@@ -361,7 +361,7 @@ def fierce(**kwargs):
             continue
 
         ips = [rr.address for rr in record.rrset]
-        if len(wildcard_ips.intersection(ips)) != 0:
+        if wildcard_ips == set(ips):
             continue
 
         ip = ipaddress.IPv4Address(ips[0])
