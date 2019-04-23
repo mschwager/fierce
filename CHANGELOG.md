@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 This project adheres to [CHANGELOG](http://keepachangelog.com/).
 
+## [Unreleased]
+### Changed
+- Print out all A records for wildcard, not just first one
+
+### Added
+- Filter out subdomains with an A record matching a wildcard A record
+
 ## [1.2.2] - 2018-04-24
 ### Changed
 - Python 3 is now a requirement when installing via setup.py (including pip)

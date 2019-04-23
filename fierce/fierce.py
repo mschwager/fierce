@@ -333,7 +333,8 @@ def fierce(**kwargs):
     random_subdomain = str(random.randint(1e10, 1e11))
     random_domain = concatenate_subdomains(domain, [random_subdomain])
     wildcard = query(resolver, random_domain, record_type='A')
-    print("Wildcard: {}".format(wildcard[0].address if wildcard else "failure"))
+    wildcard_ips = set(rr.address for rr in wildcard.rrset) if wildcard else set()
+    print("Wildcard: {}".format(', '.join(wildcard_ips) if wildcard_ips else "failure"))
 
     subdomains = get_subdomains(
         kwargs["subdomains"],
@@ -359,7 +360,11 @@ def fierce(**kwargs):
         if record is None or record.rrset is None:
             continue
 
-        ip = ipaddress.IPv4Address(record[0].address)
+        ips = [rr.address for rr in record.rrset]
+        if wildcard_ips == set(ips):
+            continue
+
+        ip = ipaddress.IPv4Address(ips[0])
 
         http_connection_headers = None
         if kwargs.get('connect') and not ip.is_private:
