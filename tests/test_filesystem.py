@@ -75,7 +75,7 @@ class TestFilesystem(fake_filesystem_unittest.TestCase):
         nameserver3
         """.strip())
 
-        self.fs.CreateFile(
+        self.fs.create_file(
             nameserver_filename,
             contents=contents
         )
@@ -100,7 +100,7 @@ class TestFilesystem(fake_filesystem_unittest.TestCase):
         nameserver3
         """.strip())
 
-        self.fs.CreateFile(
+        self.fs.create_file(
             nameserver_filename,
             contents=contents
         )
@@ -161,7 +161,7 @@ class TestFilesystem(fake_filesystem_unittest.TestCase):
         sd3.domain.com
         """.strip())
 
-        self.fs.CreateFile(
+        self.fs.create_file(
             subdomain_filename,
             contents=contents
         )
@@ -183,7 +183,7 @@ class TestFilesystem(fake_filesystem_unittest.TestCase):
         sd3.domain.com
         """.strip())
 
-        self.fs.CreateFile(
+        self.fs.create_file(
             subdomain_filename,
             contents=contents
         )
