@@ -9,6 +9,7 @@ This project adheres to [CHANGELOG](http://keepachangelog.com/).
 
 ### Added
 - Filter out subdomains with an A record matching a wildcard A record
+- Official Python 3.7 support
 
 ## [1.2.2] - 2018-04-24
 ### Changed
