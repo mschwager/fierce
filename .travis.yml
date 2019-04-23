@@ -9,7 +9,7 @@ install:
     - pip install -r requirements.txt
     - pip install -r requirements-dev.txt
 script:
-    - flake8 --ignore=E501 fierce/ tests/
+    - flake8
     - nose2 --with-coverage
 after_success:
     - coveralls

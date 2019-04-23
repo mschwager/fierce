@@ -552,7 +552,7 @@ class TestArgumentParsing(fake_filesystem_unittest.TestCase):
         self.setUpPyfakefs()
 
         filename = os.path.join('test', 'custom.txt')
-        self.fs.CreateFile(
+        self.fs.create_file(
             filename,
             contents='subdomain'
         )
