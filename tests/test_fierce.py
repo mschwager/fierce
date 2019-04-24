@@ -27,6 +27,28 @@ class MockAnswer(object):
         return self.response
 
 
+class TestTraverseExpander(unittest.TestCase):
+
+    def test_stay_in_class_C(self):
+        result = fierce.traverse_expander(ipaddress.IPv4Address('127.0.0.1'))
+        expected = [ipaddress.IPv4Address("127.0.0.%s" % i) for i in range(0, 7)]
+        self.assertEqual(expected, result)
+
+    # Upper and lower bound tests are to avoid reintroducing out of
+    # bounds error from IPv4Address. (Class C test won't necessarily
+    # cover this.)
+
+    def test_lower_bound(self):
+        result = fierce.traverse_expander(ipaddress.IPv4Address('0.0.0.2'), n=5)
+        expected = [ipaddress.IPv4Address(i) for i in range(0, 8)]
+        self.assertEqual(expected, result)
+
+    def test_upper_bound(self):
+        result = fierce.traverse_expander(ipaddress.IPv4Address('255.255.255.254'), n=5)
+        expected = [ipaddress.IPv4Address("255.255.255.%s" % i) for i in range(249, 256)]
+        self.assertEqual(expected, result)
+
+
 class TestFierce(unittest.TestCase):
 
     def test_concatenate_subdomains_empty(self):

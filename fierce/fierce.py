@@ -168,12 +168,12 @@ def default_expander(ip):
 
 
 def traverse_expander(ip, n=5):
-    class_c = get_class_c_network(ip)
+    ip = int(ip)
+    class_c_floor = ip - (ip % 256)
 
-    result = [ipaddress.IPv4Address(ip + i) for i in range(-n, n + 1)]
-    result = [i for i in result if i in class_c]
-
-    return result
+    ip_min = max(ip - n, class_c_floor)
+    ip_max = min(ip + n, class_c_floor + 255)
+    return [ipaddress.IPv4Address(i) for i in range(ip_min, ip_max + 1)]
 
 
 def wide_expander(ip):
