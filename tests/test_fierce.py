@@ -26,6 +26,7 @@ class MockAnswer(object):
     def to_text(self):
         return self.response
 
+
 class TestFierce(unittest.TestCase):
 
     def test_concatenate_subdomains_empty(self):
@@ -172,7 +173,6 @@ class TestFierce(unittest.TestCase):
             ipaddress.IPv4Address('255.255.255.255')
         ]
         self.assertEqual(expected, result)
-
 
     def test_wide_expander_basic(self):
         ip = ipaddress.IPv4Address('192.168.1.50')
