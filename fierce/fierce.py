@@ -170,9 +170,10 @@ def default_expander(ip):
 def traverse_expander(ip, n=5):
     ip = int(ip)
     class_c_floor = ip - (ip % 256)
+    class_c_ceiling = class_c_floor + 255
 
     ip_min = max(ip - n, class_c_floor)
-    ip_max = min(ip + n, class_c_floor + 255)
+    ip_max = min(ip + n, class_c_ceiling)
     return [ipaddress.IPv4Address(i) for i in range(ip_min, ip_max + 1)]
 
 

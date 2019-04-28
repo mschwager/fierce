@@ -11,6 +11,10 @@ This project adheres to [CHANGELOG](http://keepachangelog.com/).
 - Filter out subdomains with an A record matching a wildcard A record
 - Official Python 3.7 support
 
+### Fixed
+- Prevent out of bounds error when expanding IPs near 0.0.0.0 or
+  255.255.255.255
+
 ## [1.2.2] - 2018-04-24
 ### Changed
 - Python 3 is now a requirement when installing via setup.py (including pip)
