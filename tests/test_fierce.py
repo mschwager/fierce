@@ -144,6 +144,36 @@ class TestFierce(unittest.TestCase):
 
         self.assertEqual(expected, result)
 
+    # Upper and lower bound tests are to avoid reintroducing out of
+    # bounds error from IPv4Address. (no_cross_*_boundary tests won't
+    # necessarily cover this; GitHub issue #29)
+
+    def test_traverse_expander_lower_bound_regression(self):
+        ip = ipaddress.IPv4Address('0.0.0.1')
+        expand = 2
+
+        result = fierce.traverse_expander(ip, expand)
+        expected = [
+            ipaddress.IPv4Address('0.0.0.0'),
+            ipaddress.IPv4Address('0.0.0.1'),
+            ipaddress.IPv4Address('0.0.0.2'),
+            ipaddress.IPv4Address('0.0.0.3')
+        ]
+        self.assertEqual(expected, result)
+
+    def test_traverse_expander_upper_bound_regression(self):
+        ip = ipaddress.IPv4Address('255.255.255.254')
+        expand = 2
+
+        result = fierce.traverse_expander(ip, expand)
+        expected = [
+            ipaddress.IPv4Address('255.255.255.252'),
+            ipaddress.IPv4Address('255.255.255.253'),
+            ipaddress.IPv4Address('255.255.255.254'),
+            ipaddress.IPv4Address('255.255.255.255')
+        ]
+        self.assertEqual(expected, result)
+
     def test_wide_expander_basic(self):
         ip = ipaddress.IPv4Address('192.168.1.50')
 
