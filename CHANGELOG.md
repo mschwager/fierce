@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This project adheres to [CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased]
+
+## [1.3.0] - 2019-05-15
 ### Changed
 - Print out all A records for wildcard, not just first one
 
