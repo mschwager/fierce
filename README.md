@@ -115,6 +115,27 @@ Check out `--help` for further information:
 $ fierce --help
 ```
 
+# Docker
+
+Build the image:
+
+```
+docker build --no-cache --force-rm -t fierce .
+```
+
+Run the image:
+
+```
+docker run --rm fierce
+```
+
+Example:
+
+```
+docker run --rm fierce --domain google.com --subdomains accounts admin ads
+```
+
+
 # TODO
 
 * Provide multiprocessing capabilities
