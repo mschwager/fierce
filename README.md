@@ -116,7 +116,3 @@ Check out `--help` for further information:
 ```
 $ fierce --help
 ```
-
-# TODO
-
-* Provide multiprocessing capabilities
