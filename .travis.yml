@@ -11,6 +11,6 @@ install:
     - pip install -e .
 script:
     - flake8
-    - nose2 --with-coverage
+    - pytest --cov
 after_success:
     - coveralls
