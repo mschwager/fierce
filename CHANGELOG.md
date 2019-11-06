@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This project adheres to [CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased]
+### Added
+- Official Python 3.8 support
+
+### Removed
+- Official Python 3.4 support, it's EOL
 
 ## [1.3.0] - 2019-05-15
 ### Changed
