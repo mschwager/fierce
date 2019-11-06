@@ -108,9 +108,9 @@ def concatenate_subdomains(domain, subdomains):
     return result
 
 
-def query(resolver, domain, record_type='A'):
+def query(resolver, domain, record_type='A', use_tcp=False):
     try:
-        resp = resolver.query(domain, record_type, raise_on_no_answer=False)
+        resp = resolver.query(domain, record_type, raise_on_no_answer=False, tcp=use_tcp)
         if resp.response.answer:
             return resp
 
@@ -124,23 +124,23 @@ def query(resolver, domain, record_type='A'):
                 for rdata in additionals.items
             ]
             resolver.nameservers = ns
-            return query(resolver, domain, record_type)
+            return query(resolver, domain, record_type, use_tcp=use_tcp)
 
         return None
     except (dns.resolver.NXDOMAIN, dns.resolver.NoNameservers, dns.exception.Timeout):
         return None
 
 
-def reverse_query(resolver, ip):
-    return query(resolver, dns.reversename.from_address(ip), record_type='PTR')
+def reverse_query(resolver, ip, use_tcp=False):
+    return query(resolver, dns.reversename.from_address(ip), record_type='PTR', use_tcp=use_tcp)
 
 
-def recursive_query(resolver, domain, record_type='NS'):
+def recursive_query(resolver, domain, record_type='NS', use_tcp=False):
     query_domain = str(domain)
     query_response = None
     try:
         while query_response is None:
-            query_response = query(resolver, query_domain, record_type)
+            query_response = query(resolver, query_domain, record_type, use_tcp=use_tcp)
             query_domain = query_domain.split('.', 1)[1]
     except IndexError:
         return None
@@ -306,7 +306,7 @@ def fierce(**kwargs):
     if not domain.is_absolute():
         domain = domain.concatenate(dns.name.root)
 
-    ns = recursive_query(resolver, domain, 'NS')
+    ns = recursive_query(resolver, domain, 'NS', use_tcp=kwargs.get("tcp"))
 
     if ns:
         domain_name_servers = [n.to_text() for n in ns]
@@ -315,10 +315,10 @@ def fierce(**kwargs):
 
     print("NS: {}".format(" ".join(domain_name_servers) if ns else "failure"))
 
-    soa = recursive_query(resolver, domain, record_type='SOA')
+    soa = recursive_query(resolver, domain, record_type='SOA', use_tcp=kwargs.get("tcp"))
     if soa:
         soa_mname = soa[0].mname
-        master = query(resolver, soa_mname, record_type='A')
+        master = query(resolver, soa_mname, record_type='A', use_tcp=kwargs.get("tcp"))
         master_address = master[0].address
         print("SOA: {} ({})".format(soa_mname, master_address))
     else:
@@ -333,7 +333,7 @@ def fierce(**kwargs):
 
     random_subdomain = str(random.randint(1e10, 1e11))
     random_domain = concatenate_subdomains(domain, [random_subdomain])
-    wildcard = query(resolver, random_domain, record_type='A')
+    wildcard = query(resolver, random_domain, record_type='A', use_tcp=kwargs.get("tcp"))
     wildcard_ips = set(rr.address for rr in wildcard.rrset) if wildcard else set()
     print("Wildcard: {}".format(', '.join(wildcard_ips) if wildcard_ips else "failure"))
 
@@ -356,7 +356,7 @@ def fierce(**kwargs):
 
     for subdomain in subdomains:
         url = concatenate_subdomains(domain, [subdomain])
-        record = query(resolver, url, record_type='A')
+        record = query(resolver, url, record_type='A', use_tcp=kwargs.get("tcp"))
 
         if record is None or record.rrset is None:
             continue
@@ -462,6 +462,12 @@ def parse_args(args):
         '--dns-file',
         action='store',
         help='use dns servers specified in this file for reverse lookups (one per line)'
+    )
+    p.add_argument(
+        '--tcp',
+        action='store_true',
+        default=False,
+        help='use TCP instead of UDP'
     )
 
     args = p.parse_args(args)
