@@ -36,7 +36,7 @@ class TestFierce(unittest.TestCase):
         result = fierce.concatenate_subdomains(domain, subdomains)
         expected = dns.name.from_text("example.com.")
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_concatenate_subdomains_single_subdomain(self):
         domain = dns.name.from_text("example.com.")
@@ -45,7 +45,7 @@ class TestFierce(unittest.TestCase):
         result = fierce.concatenate_subdomains(domain, subdomains)
         expected = dns.name.from_text("sd1.example.com.")
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_concatenate_subdomains_multiple_subdomains(self):
         domain = dns.name.from_text("example.com.")
@@ -54,7 +54,7 @@ class TestFierce(unittest.TestCase):
         result = fierce.concatenate_subdomains(domain, subdomains)
         expected = dns.name.from_text("sd1.sd2.example.com.")
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_concatenate_subdomains_makes_root(self):
         # Domain is missing '.' at the end
@@ -64,7 +64,7 @@ class TestFierce(unittest.TestCase):
         result = fierce.concatenate_subdomains(domain, subdomains)
         expected = dns.name.from_text("example.com.")
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_concatenate_subdomains_single_sub_subdomain(self):
         domain = dns.name.from_text("example.com.")
@@ -73,7 +73,7 @@ class TestFierce(unittest.TestCase):
         result = fierce.concatenate_subdomains(domain, subdomains)
         expected = dns.name.from_text("sd1.sd2.example.com.")
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_concatenate_subdomains_multiple_sub_subdomain(self):
         domain = dns.name.from_text("example.com.")
@@ -82,7 +82,7 @@ class TestFierce(unittest.TestCase):
         result = fierce.concatenate_subdomains(domain, subdomains)
         expected = dns.name.from_text("sd1.sd2.sd3.sd4.example.com.")
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_concatenate_subdomains_fqdn_subdomain(self):
         domain = dns.name.from_text("example.")
@@ -91,7 +91,7 @@ class TestFierce(unittest.TestCase):
         result = fierce.concatenate_subdomains(domain, subdomains)
         expected = dns.name.from_text("sd1.sd2.example.")
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_default_expander(self):
         ip = ipaddress.IPv4Address('192.168.1.1')
@@ -101,7 +101,7 @@ class TestFierce(unittest.TestCase):
             ipaddress.IPv4Address('192.168.1.1'),
         ]
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_traverse_expander_basic(self):
         ip = ipaddress.IPv4Address('192.168.1.1')
@@ -114,7 +114,7 @@ class TestFierce(unittest.TestCase):
             ipaddress.IPv4Address('192.168.1.2'),
         ]
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_traverse_expander_no_cross_lower_boundary(self):
         ip = ipaddress.IPv4Address('192.168.1.1')
@@ -128,7 +128,7 @@ class TestFierce(unittest.TestCase):
             ipaddress.IPv4Address('192.168.1.3'),
         ]
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_traverse_expander_no_cross_upper_boundary(self):
         ip = ipaddress.IPv4Address('192.168.1.254')
@@ -142,7 +142,7 @@ class TestFierce(unittest.TestCase):
             ipaddress.IPv4Address('192.168.1.255'),
         ]
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     # Upper and lower bound tests are to avoid reintroducing out of
     # bounds error from IPv4Address. (no_cross_*_boundary tests won't
@@ -159,7 +159,7 @@ class TestFierce(unittest.TestCase):
             ipaddress.IPv4Address('0.0.0.2'),
             ipaddress.IPv4Address('0.0.0.3')
         ]
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_traverse_expander_upper_bound_regression(self):
         ip = ipaddress.IPv4Address('255.255.255.254')
@@ -172,7 +172,7 @@ class TestFierce(unittest.TestCase):
             ipaddress.IPv4Address('255.255.255.254'),
             ipaddress.IPv4Address('255.255.255.255')
         ]
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_wide_expander_basic(self):
         ip = ipaddress.IPv4Address('192.168.1.50')
@@ -184,7 +184,7 @@ class TestFierce(unittest.TestCase):
             for i in range(256)
         ]
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_wide_expander_lower_boundary(self):
         ip = ipaddress.IPv4Address('192.168.1.0')
@@ -196,7 +196,7 @@ class TestFierce(unittest.TestCase):
             for i in range(256)
         ]
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_wide_expander_upper_boundary(self):
         ip = ipaddress.IPv4Address('192.168.1.255')
@@ -208,7 +208,7 @@ class TestFierce(unittest.TestCase):
             for i in range(256)
         ]
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_range_expander(self):
         ip = '192.168.1.0/31'
@@ -220,7 +220,7 @@ class TestFierce(unittest.TestCase):
             ipaddress.IPv4Address('192.168.1.1'),
         ]
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_recursive_query_basic_failure(self):
         resolver = dns.resolver.Resolver()
@@ -237,7 +237,7 @@ class TestFierce(unittest.TestCase):
         ]
 
         mock_method.assert_has_calls(expected)
-        self.assertIsNone(result)
+        assert result is None
 
     def test_recursive_query_long_domain_failure(self):
         resolver = dns.resolver.Resolver()
@@ -256,7 +256,7 @@ class TestFierce(unittest.TestCase):
         ]
 
         mock_method.assert_has_calls(expected)
-        self.assertIsNone(result)
+        assert result is None
 
     def test_recursive_query_basic_success(self):
         resolver = dns.resolver.Resolver()
@@ -278,7 +278,7 @@ class TestFierce(unittest.TestCase):
         ]
 
         mock_method.assert_has_calls(expected)
-        self.assertEqual(result, good_response)
+        assert result == good_response
 
     def test_query_nxdomain(self):
         resolver = dns.resolver.Resolver()
@@ -287,7 +287,7 @@ class TestFierce(unittest.TestCase):
         with unittest.mock.patch.object(resolver, 'query', side_effect=dns.resolver.NXDOMAIN()):
             result = fierce.query(resolver, domain)
 
-        self.assertIsNone(result)
+        assert result is None
 
     def test_query_no_nameservers(self):
         resolver = dns.resolver.Resolver()
@@ -296,7 +296,7 @@ class TestFierce(unittest.TestCase):
         with unittest.mock.patch.object(resolver, 'query', side_effect=dns.resolver.NoNameservers()):
             result = fierce.query(resolver, domain)
 
-        self.assertIsNone(result)
+        assert result is None
 
     def test_query_timeout(self):
         resolver = dns.resolver.Resolver()
@@ -305,7 +305,7 @@ class TestFierce(unittest.TestCase):
         with unittest.mock.patch.object(resolver, 'query', side_effect=dns.exception.Timeout()):
             result = fierce.query(resolver, domain)
 
-        self.assertIsNone(result)
+        assert result is None
 
     def test_zone_transfer_connection_error(self):
         address = 'test'
@@ -314,7 +314,7 @@ class TestFierce(unittest.TestCase):
         with unittest.mock.patch.object(fierce.dns.zone, 'from_xfr', side_effect=ConnectionError()):
             result = fierce.zone_transfer(address, domain)
 
-        self.assertIsNone(result)
+        assert result is None
 
     def test_zone_transfer_eof_error(self):
         address = 'test'
@@ -323,7 +323,7 @@ class TestFierce(unittest.TestCase):
         with unittest.mock.patch.object(fierce.dns.zone, 'from_xfr', side_effect=EOFError()):
             result = fierce.zone_transfer(address, domain)
 
-        self.assertIsNone(result)
+        assert result is None
 
     def test_zone_transfer_timeout_error(self):
         address = 'test'
@@ -332,7 +332,7 @@ class TestFierce(unittest.TestCase):
         with unittest.mock.patch.object(fierce.dns.zone, 'from_xfr', side_effect=TimeoutError()):
             result = fierce.zone_transfer(address, domain)
 
-        self.assertIsNone(result)
+        assert result is None
 
     def test_zone_transfer_form_error(self):
         address = 'test'
@@ -341,7 +341,7 @@ class TestFierce(unittest.TestCase):
         with unittest.mock.patch.object(fierce.dns.zone, 'from_xfr', side_effect=dns.exception.FormError()):
             result = fierce.zone_transfer(address, domain)
 
-        self.assertIsNone(result)
+        assert result is None
 
     def test_find_nearby_empty(self):
         resolver = 'unused'
@@ -350,7 +350,7 @@ class TestFierce(unittest.TestCase):
         result = fierce.find_nearby(resolver, ips)
         expected = {}
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_find_nearby_basic(self):
         resolver = 'unused'
@@ -371,7 +371,7 @@ class TestFierce(unittest.TestCase):
             '192.168.1.1': 'sd2.example.com.',
         }
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_find_nearby_filter_func(self):
         resolver = 'unused'
@@ -394,7 +394,7 @@ class TestFierce(unittest.TestCase):
             '192.168.1.0': 'sd1.example.com.',
         }
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_print_subdomain_result_basic(self):
         url = 'example.com'
@@ -406,7 +406,7 @@ class TestFierce(unittest.TestCase):
 
         expected = 'Found: example.com (192.168.1.0)\n'
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_print_subdomain_result_nearby(self):
         url = 'example.com'
@@ -423,7 +423,7 @@ class TestFierce(unittest.TestCase):
             {'192.168.1.1': 'nearby.com'}
         ''').lstrip()
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_print_subdomain_result_http_header(self):
         url = 'example.com'
@@ -445,7 +445,7 @@ class TestFierce(unittest.TestCase):
             {'HTTP HEADER': 'value'}
         ''').lstrip()
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_print_subdomain_result_both(self):
         url = 'example.com'
@@ -471,7 +471,7 @@ class TestFierce(unittest.TestCase):
             {'192.168.1.1': 'nearby.com'}
         ''').lstrip()
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_unvisited_closure_empty(self):
         unvisited = fierce.unvisited_closure()
@@ -480,7 +480,7 @@ class TestFierce(unittest.TestCase):
         result = unvisited(ips)
         expected = set()
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_unvisited_closure_empty_intersection(self):
         unvisited = fierce.unvisited_closure()
@@ -489,7 +489,7 @@ class TestFierce(unittest.TestCase):
         result = unvisited(set([4, 5, 6]))
         expected = set([4, 5, 6])
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_unvisited_closure_overlapping_intersection(self):
         unvisited = fierce.unvisited_closure()
@@ -498,7 +498,7 @@ class TestFierce(unittest.TestCase):
         result = unvisited(set([2, 3, 4]))
         expected = set([4])
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_search_filter_empty(self):
         domains = []
@@ -506,7 +506,7 @@ class TestFierce(unittest.TestCase):
 
         result = fierce.search_filter(domains, address)
 
-        self.assertFalse(result)
+        assert not result
 
     def test_search_filter_true(self):
         domains = ['example.com']
@@ -514,7 +514,7 @@ class TestFierce(unittest.TestCase):
 
         result = fierce.search_filter(domains, address)
 
-        self.assertTrue(result)
+        assert result
 
     def test_search_filter_false(self):
         domains = ['not.com']
@@ -522,7 +522,7 @@ class TestFierce(unittest.TestCase):
 
         result = fierce.search_filter(domains, address)
 
-        self.assertFalse(result)
+        assert not result
 
 
 class TestArgumentParsing(fake_filesystem_unittest.TestCase):
@@ -536,7 +536,7 @@ class TestArgumentParsing(fake_filesystem_unittest.TestCase):
         result = args.domain
         expected = domain
 
-        self.assertEqual(expected, result)
+        assert expected == result
 
     def test_parse_args_included_list_file(self):
         filename = '5000.txt'
@@ -555,8 +555,8 @@ class TestArgumentParsing(fake_filesystem_unittest.TestCase):
         )
         exists = os.path.exists(result)
 
-        self.assertEqual(expected, result)
-        self.assertTrue(exists)
+        assert expected == result
+        assert exists
 
     def test_parse_args_missing_list_file(self):
         filename = 'missing.txt'
@@ -575,8 +575,8 @@ class TestArgumentParsing(fake_filesystem_unittest.TestCase):
         )
         exists = os.path.exists(result)
 
-        self.assertEqual(expected, result)
-        self.assertFalse(exists)
+        assert expected == result
+        assert not exists
 
     def test_parse_args_custom_list_file(self):
         self.setUpPyfakefs()
@@ -595,8 +595,8 @@ class TestArgumentParsing(fake_filesystem_unittest.TestCase):
         expected = filename
         exists = os.path.exists(result)
 
-        self.assertEqual(expected, result)
-        self.assertTrue(exists)
+        assert expected == result
+        assert exists
 
 
 if __name__ == "__main__":

@@ -1,4 +1,5 @@
-nose2==0.9.1
+pytest==5.2.2
+pytest-cov==2.8.1
 flake8==3.7.7
 coveralls==1.7.0
 pyfakefs==3.5.8
