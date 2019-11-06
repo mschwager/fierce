@@ -40,7 +40,7 @@ The original description was very apt, so I'll include it here:
 # Installing
 
 ```
-$ pip3 install fierce
+$ python -m pip install fierce
 $ fierce -h
 ```
 
@@ -49,9 +49,11 @@ OR
 ```
 $ git clone https://github.com/mschwager/fierce.git
 $ cd fierce
-$ pip3 install -r requirements.txt
-$ python3 fierce/fierce.py -h
+$ python -m pip install -r requirements.txt
+$ python fierce/fierce.py -h
 ```
+
+*Requires Python 3.*
 
 # Using
 
