@@ -6,6 +6,7 @@ This project adheres to [CHANGELOG](http://keepachangelog.com/).
 ## [Unreleased]
 ### Added
 - Official Python 3.8 support
+- The --tcp flag to use TCP instead of UDP DNS queries
 
 ### Removed
 - Official Python 3.4 support, it's EOL
