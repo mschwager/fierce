@@ -231,9 +231,9 @@ class TestFierce(unittest.TestCase):
             result = fierce.recursive_query(resolver, domain, record_type=record_type)
 
         expected = [
-            unittest.mock.call(resolver, 'example.com.', record_type),
-            unittest.mock.call(resolver, 'com.', record_type),
-            unittest.mock.call(resolver, '', record_type),
+            unittest.mock.call(resolver, 'example.com.', record_type, use_tcp=False),
+            unittest.mock.call(resolver, 'com.', record_type, use_tcp=False),
+            unittest.mock.call(resolver, '', record_type, use_tcp=False),
         ]
 
         mock_method.assert_has_calls(expected)
@@ -248,11 +248,11 @@ class TestFierce(unittest.TestCase):
             result = fierce.recursive_query(resolver, domain, record_type=record_type)
 
         expected = [
-            unittest.mock.call(resolver, 'sd1.sd2.example.com.', record_type),
-            unittest.mock.call(resolver, 'sd2.example.com.', record_type),
-            unittest.mock.call(resolver, 'example.com.', record_type),
-            unittest.mock.call(resolver, 'com.', record_type),
-            unittest.mock.call(resolver, '', record_type),
+            unittest.mock.call(resolver, 'sd1.sd2.example.com.', record_type, use_tcp=False),
+            unittest.mock.call(resolver, 'sd2.example.com.', record_type, use_tcp=False),
+            unittest.mock.call(resolver, 'example.com.', record_type, use_tcp=False),
+            unittest.mock.call(resolver, 'com.', record_type, use_tcp=False),
+            unittest.mock.call(resolver, '', record_type, use_tcp=False),
         ]
 
         mock_method.assert_has_calls(expected)
@@ -273,8 +273,8 @@ class TestFierce(unittest.TestCase):
             result = fierce.recursive_query(resolver, domain, record_type=record_type)
 
         expected = [
-            unittest.mock.call(resolver, 'example.com.', record_type),
-            unittest.mock.call(resolver, 'com.', record_type),
+            unittest.mock.call(resolver, 'example.com.', record_type, use_tcp=False),
+            unittest.mock.call(resolver, 'com.', record_type, use_tcp=False),
         ]
 
         mock_method.assert_has_calls(expected)
