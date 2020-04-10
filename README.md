@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/mschwager/fierce.svg?branch=master)](https://travis-ci.org/mschwager/fierce)
 [![Coverage Status](https://coveralls.io/repos/github/mschwager/fierce/badge.svg?branch=master)](https://coveralls.io/github/mschwager/fierce?branch=master)
-[![Dlint Status](https://github.com/mschwager/fierce/workflows/Dlint/badge.svg)](https://github.com/mschwager/dlint-action)
+[![Dlint Status](https://github.com/mschwager/fierce/workflows/Dlint/badge.svg)](https://github.com/dlint-py/dlint-action)
 [![Python Versions](https://img.shields.io/pypi/pyversions/fierce.svg)](https://img.shields.io/pypi/pyversions/fierce.svg)
 [![PyPI Version](https://img.shields.io/pypi/v/fierce.svg)](https://img.shields.io/pypi/v/fierce.svg)
 
