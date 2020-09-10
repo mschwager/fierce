@@ -127,7 +127,7 @@ def query(resolver, domain, record_type='A', tcp=False):
             return query(resolver, domain, record_type, tcp=tcp)
 
         return None
-    except (dns.resolver.NXDOMAIN, dns.resolver.NoNameservers, dns.exception.Timeout):
+    except (dns.resolver.NXDOMAIN, dns.resolver.NoNameservers, dns.exception.Timeout, ValueError):
         return None
 
 
