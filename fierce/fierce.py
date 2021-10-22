@@ -355,8 +355,12 @@ def fierce(**kwargs):
     unvisited = unvisited_closure()
 
     for subdomain in subdomains:
-        url = concatenate_subdomains(domain, [subdomain])
-        record = query(resolver, url, record_type='A', tcp=kwargs["tcp"])
+        try:
+            url = concatenate_subdomains(domain, [subdomain])
+            record = query(resolver, url, record_type='A', tcp=kwargs["tcp"])
+        except:
+            print("Error occured for subdomain: "+str(subdomain)+". Skipping.")
+            continue
 
         if record is None or record.rrset is None:
             continue
