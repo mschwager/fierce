@@ -357,10 +357,11 @@ def fierce(**kwargs):
     for subdomain in subdomains:
         try:
             url = concatenate_subdomains(domain, [subdomain])
-            record = query(resolver, url, record_type='A', tcp=kwargs["tcp"])
-        except:
+        except dns.exception.DNSException:
             print("Error occured for subdomain: "+str(subdomain)+". Skipping.")
             continue
+
+        record = query(resolver, url, record_type='A', tcp=kwargs["tcp"])
 
         if record is None or record.rrset is None:
             continue
