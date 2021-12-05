@@ -23,9 +23,10 @@ Useful links:
 
 # Overview
 
-First, credit where credit is due, `fierce` was originally written by RSnake
-along with others at http://ha.ckers.org/. This is simply a conversion to
-Python 3 to simplify and modernize the codebase.
+First, credit where credit is due, `fierce` was
+[originally written](https://github.com/mschwager/fierce/blob/master/scripts/fierce.pl)
+by RSnake along with others at http://ha.ckers.org/. This is simply a
+conversion to Python 3 to simplify and modernize the codebase.
 
 The original description was very apt, so I'll include it here:
 
