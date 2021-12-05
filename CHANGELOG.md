@@ -4,9 +4,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This project adheres to [CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased]
+
+## [1.5.0] - 2021-12-05
 ### Added
 - Official Python 3.9 support
 - Official Python 3.10 support
+
+### Changed
+- Improved various error handling
 
 ### Removed
 - Official Python 3.5 support
