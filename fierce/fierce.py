@@ -6,6 +6,7 @@ import functools
 import http.client
 import ipaddress
 import itertools
+from logging import warning
 import multiprocessing
 import os
 import pprint
@@ -13,6 +14,7 @@ import random
 import socket
 import sys
 import time
+import warnings
 
 import dns.exception
 import dns.name
@@ -321,6 +323,9 @@ def fierce(**kwargs):
         master = query(resolver, soa_mname, record_type='A', tcp=kwargs["tcp"])
         master_address = master[0].address
         print("SOA: {} ({})".format(soa_mname, master_address))
+        if master_address == "127.0.0.1":
+            warning("Master address is localhost, switching to provided resolver (%s) instead" % resolver.nameservers[0])
+            master_address = resolver.nameservers[0]
     else:
         print("SOA: failure")
         fatal("Failed to lookup NS/SOA, Domain does not exist")
