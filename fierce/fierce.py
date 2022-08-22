@@ -110,7 +110,7 @@ def concatenate_subdomains(domain, subdomains):
 
 def query(resolver, domain, record_type='A', tcp=False):
     try:
-        resp = resolver.query(domain, record_type, raise_on_no_answer=False, tcp=tcp)
+        resp = resolver.resolve(qname=domain, rdtype=record_type, raise_on_no_answer=False, tcp=True)
         if resp.response.answer:
             return resp
 
