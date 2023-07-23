@@ -319,8 +319,12 @@ def fierce(**kwargs):
     if soa:
         soa_mname = soa[0].mname
         master = query(resolver, soa_mname, record_type='A', tcp=kwargs["tcp"])
-        master_address = master[0].address
-        print("SOA: {} ({})".format(soa_mname, master_address))
+        if master:
+            master_address = master[0].address
+            print("SOA: {} ({})".format(soa_mname, master_address))
+        else:
+            print("SOA: failure")
+            fatal("Failed to lookup NS/SOA, Domain does not exist")
     else:
         print("SOA: failure")
         fatal("Failed to lookup NS/SOA, Domain does not exist")
