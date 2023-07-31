@@ -38,8 +38,6 @@ setup(
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: Microsoft :: Windows',
         'Operating System :: POSIX',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
@@ -47,7 +45,7 @@ setup(
     ],
     install_requires=install_requires,
     tests_require=tests_require,
-    python_requires='>=3.0',
+    python_requires='>=3.8',
     entry_points={
         'console_scripts': [
             'fierce = fierce.fierce:main',
