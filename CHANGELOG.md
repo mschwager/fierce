@@ -6,7 +6,6 @@ This project adheres to [CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased]
 
-## [1.5.1] - 2023-07-30
 
 ### Fixed
 
