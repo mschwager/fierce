@@ -9,6 +9,7 @@ This project adheres to [CHANGELOG](http://keepachangelog.com/).
 ### Fixed
 
 - Add proper error handling for cases when SOA record is None
+- `random.randint` requires `int` arguments ([#44](https://github.com/mschwager/fierce/issues/44))
 
 ### Added
 
