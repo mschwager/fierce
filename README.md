@@ -50,11 +50,9 @@ OR
 ```
 $ git clone https://github.com/mschwager/fierce.git
 $ cd fierce
-$ python -m pip install -r requirements.txt
+$ python -m pip install dnspython==1.16.0
 $ python fierce/fierce.py -h
 ```
-
-*Requires Python 3.*
 
 # Using
 
