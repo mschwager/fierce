@@ -10,6 +10,11 @@ This project adheres to [CHANGELOG](http://keepachangelog.com/).
 
 - Add proper error handling for cases when SOA record is None
 
+### Added
+
+- Official Python 3.11 support
+- Official Python 3.12 support
+
 ### Removed
 
 - Official Python 3.6 support
