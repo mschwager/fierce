@@ -59,7 +59,7 @@ def find_subdomain_list_file(filename):
         return os.path.abspath(filename_path)
 
     try:
-        import importlib
+        from importlib import resources
     except ImportError:
         return filename
 
@@ -68,7 +68,7 @@ def find_subdomain_list_file(filename):
     # installs (duh)
     try:
         # Use importlib.resources.as_file when Python 3.9 is minimum version
-        full_package_path = importlib.resources.path("fierce.lists", filename)
+        full_package_path = resources.path("fierce.lists", filename)
     except ImportError:
         return filename
 
