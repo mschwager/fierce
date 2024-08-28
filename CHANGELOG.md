@@ -6,6 +6,8 @@ This project adheres to [CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.6.0] - 2024-08-28
+
 ### Fixed
 
 - Add proper error handling for cases when SOA record is None
