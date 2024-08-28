@@ -42,10 +42,10 @@ def print_subdomain_result(url, ip, http_connection_headers=None, nearby=None, s
 def unvisited_closure():
     visited = set()
 
-    def inner(l):
+    def inner(inner_visited):
         nonlocal visited
-        result = set(l).difference(visited)
-        visited.update(l)
+        result = set(inner_visited).difference(visited)
+        visited.update(inner_visited)
         return result
 
     return inner

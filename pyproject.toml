@@ -23,14 +23,14 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.8.1"
 dnspython = "1.16.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "6.2.5"
-pytest-cov = "3.0.0"
-flake8 = "3.7.7"
-pyfakefs = "5.6.0"
+pytest = "^8.3.0"
+pytest-cov = "^5.0.0"
+flake8 = "^7.1.0"
+pyfakefs = "^5.6.0"
 
 [tool.poetry.group.dev]
 optional = true
