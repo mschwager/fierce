@@ -1,9 +1,0 @@
-name: Dlint
-on: [push, pull_request]
-jobs:
-  dlint:
-    runs-on: ubuntu-latest
-    name: Dlint
-    steps:
-    - uses: actions/checkout@master
-    - uses: dlint-py/dlint-action@master

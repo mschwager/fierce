@@ -335,7 +335,7 @@ def fierce(**kwargs):
         pprint.pprint({k: v.to_text(k) for k, v in zone.items()})
         return
 
-    random_subdomain = str(random.randint(1e10, 1e11))  # noqa DUO102, non-cryptographic random use
+    random_subdomain = str(random.randint(1e10, 1e11))
     random_domain = concatenate_subdomains(domain, [random_subdomain])
     wildcard = query(resolver, random_domain, record_type='A', tcp=kwargs["tcp"])
     wildcard_ips = set(rr.address for rr in wildcard.rrset) if wildcard else set()

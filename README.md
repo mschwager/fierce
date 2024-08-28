@@ -1,8 +1,6 @@
 # Fierce
 
 [![CI](https://github.com/mschwager/fierce/actions/workflows/ci.yml/badge.svg)](https://github.com/mschwager/fierce/actions/workflows/ci.yml)
-[![Coverage Status](https://coveralls.io/repos/github/mschwager/fierce/badge.svg?branch=master)](https://coveralls.io/github/mschwager/fierce?branch=master)
-[![Dlint](https://github.com/mschwager/fierce/actions/workflows/dlint.yml/badge.svg)](https://github.com/mschwager/fierce/actions/workflows/dlint.yml)
 [![Python Versions](https://img.shields.io/pypi/pyversions/fierce.svg)](https://img.shields.io/pypi/pyversions/fierce.svg)
 [![PyPI Version](https://img.shields.io/pypi/v/fierce.svg)](https://img.shields.io/pypi/v/fierce.svg)
 
@@ -122,28 +120,26 @@ $ fierce --help
 
 # Developing
 
-First, install development packages:
+First, install [`poetry`](https://python-poetry.org/docs/#installation) and development packages:
 
 ```
-$ python -m pip install -r requirements.txt
-$ python -m pip install -r requirements-dev.txt
-$ python -m pip install -e .
+$ poetry install --with dev
 ```
 
 ## Testing
 
 ```
-$ pytest
+$ poetry run pytest
 ```
 
 ## Linting
 
 ```
-$ flake8
+$ poetry run flake8
 ```
 
 ## Coverage
 
 ```
-$ pytest --cov
+$ poetry run pytest --cov
 ```

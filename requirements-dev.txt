@@ -1,5 +1,0 @@
-pytest==6.2.5
-pytest-cov==3.0.0
-flake8==3.7.7
-coveralls==1.7.0
-pyfakefs==3.5.8
