@@ -58,22 +58,15 @@ def find_subdomain_list_file(filename):
     if os.path.exists(filename_path):
         return os.path.abspath(filename_path)
 
-    try:
-        from importlib import resources
-    except ImportError:
-        return filename
-
     # If the relative check failed then attempt to find the list file
     # in the pip package directory. This will typically happen on pip package
     # installs (duh)
     try:
-        # Use importlib.resources.as_file when Python 3.9 is minimum version
-        full_package_path = resources.path("fierce.lists", filename)
+        from fierce import lists
     except ImportError:
         return filename
 
-    with full_package_path as path:
-        return str(path)
+    return str(lists.CURDIR / filename)
 
 
 def head_request(url, timeout=2):
