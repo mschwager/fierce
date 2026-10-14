@@ -54,6 +54,15 @@ $ python -m pip install dnspython==1.16.0
 $ python fierce/fierce.py -h
 ```
 
+OR, on Linux, with [OTinstaller](https://github.com/OSINTVerseHQ/OTinstaller), a third-party tool manager that installs the PyPI release into its own virtualenv. It isn't maintained by the fierce authors, so please report problems with it [on the OTinstaller tracker](https://github.com/OSINTVerseHQ/OTinstaller/issues):
+
+```
+$ pipx install otinstaller
+$ otinstaller init
+$ otinstaller install fierce
+$ otinstaller run fierce -- --domain zonetransfer.me   # same as fierce --domain zonetransfer.me
+```
+
 # Using
 
 Let's start with something basic:
