@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 
+# GPLv3 section 5(a) modification notice, dated 2026-11-06:
+# range_expander() now catches ValueError instead of only
+# ipaddress.AddressValueError, so an invalid netmask or a CIDR with host bits
+# set reaches the documented fatal "Invalid IPv4 CIDR" path instead of
+# escaping as an uncaught exception.
+
 import argparse
 import concurrent.futures
 import functools
@@ -179,7 +185,7 @@ def wide_expander(ip):
 def range_expander(ip):
     try:
         network = ipaddress.IPv4Network(ip)
-    except ipaddress.AddressValueError:
+    except ValueError:
         fatal("Invalid IPv4 CIDR: {!r}".format(ip))
 
     result = list(network)
